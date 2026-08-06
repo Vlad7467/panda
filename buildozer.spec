@@ -19,6 +19,9 @@ android.ndk = 28c
 android.sdk = 30
 android.build_tools = 30.0.3
 
+# Фикс для libffi: используем версию из NDK, а не сборку из исходников
+android.ndk_libffi_version = 3.4.6
+
 android.sdk_path = /home/runner/android-sdk
 android.ndk_path = /home/runner/android-ndk
 android.ant_path = /home/runner/apache-ant
