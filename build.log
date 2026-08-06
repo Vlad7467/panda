@@ -1,0 +1,5 @@
+# Ensure build layout
+# Check configuration tokens
+# Preparing build
+# Check requirements for android
+# zlib headers must be installed, run: sudo apt-get install zlib1g-dev
