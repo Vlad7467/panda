@@ -21,35 +21,49 @@ jobs:
         run: |
           pip3 install --no-cache-dir buildozer cython
 
-      - name: Set up Android SDK and NDK
+      - name: Set up Android SDK with correct structure for buildozer
         run: |
           mkdir -p $HOME/android-sdk $HOME/android-ndk $HOME/apache-ant
+
+          # SDK - устанавливаем в структуру, которую ожидает buildozer
           cd $HOME/android-sdk
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
           unzip -q commandlinetools-linux-9477386_latest.zip
           rm commandlinetools-linux-9477386_latest.zip
-          mkdir -p cmdline-tools/latest
-          mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
-          export ANDROID_SDK_ROOT=$HOME/android-sdk
-          export PATH=$ANDROID_SDK_ROOT/cmdline-tools/latest/bin:$PATH
-          yes | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses > /dev/null 2>&1 || true
-          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-30" "build-tools;30.0.3"
 
+          # Создаём папку tools и кладём всё туда (как ожидает buildozer)
+          mkdir -p tools
+          mv cmdline-tools/* tools/ 2>/dev/null || true
+          chmod +x tools/bin/sdkmanager tools/bin/avdmanager
+
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+          export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH
+
+          # Принимаем лицензии
+          yes | sdkmanager --sdk_root=$ANDROID_SDK_ROOT --licenses > /dev/null 2>&1 || true
+
+          # Устанавливаем нужные компоненты
+          sdkmanager --sdk_root=$ANDROID_SDK_ROOT "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+
+          # NDK r28c
           cd $HOME/android-ndk
           wget -q https://dl.google.com/android/repository/android-ndk-r28c-linux.zip
           unzip -q android-ndk-r28c-linux.zip
           rm android-ndk-r28c-linux.zip
           mv android-ndk-r28c/* . 2>/dev/null || true
 
+          # ANT
           cd $HOME/apache-ant
           wget -q https://archive.apache.org/dist/ant/binaries/apache-ant-1.9.4-bin.tar.gz
           tar -xzf apache-ant-1.9.4-bin.tar.gz
           rm apache-ant-1.9.4-bin.tar.gz
           mv apache-ant-1.9.4/* . 2>/dev/null || true
 
+          # Переменные окружения для buildozer
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_NDK_HOME=$HOME/android-ndk" >> $GITHUB_ENV
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "$HOME/android-sdk/tools/bin" >> $GITHUB_PATH
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
           echo "$HOME/android-ndk" >> $GITHUB_PATH
           echo "$HOME/apache-ant/bin" >> $GITHUB_PATH
