@@ -1,0 +1,24 @@
+[app]
+title = Panda Chaos
+package.name = pandachaos
+package.domain = org.pandachaos
+
+source.dir = .
+source.include_exts = py,png,jpg,kv,atlas,ttf,txt,wav,mp3,json,db
+
+version = 0.1
+requirements = python3,pygame,numpy,pillow,requests
+
+orientation = landscape
+fullscreen = 1
+
+android.permissions = INTERNET, WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE
+android.ndk = 28c
+android.sdk = 30
+android.api = 30
+android.arch = armeabi-v7a
+android.build_tools = 30.0.3
+
+[buildozer]
+log_level = 2
+warn_on_root = 1
