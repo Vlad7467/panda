@@ -25,20 +25,25 @@ jobs:
         run: |
           mkdir -p $HOME/android-sdk $HOME/android-ndk $HOME/apache-ant
 
-          # SDK
+          # SDK (commandlinetools) - создаём правильную структуру
           cd $HOME/android-sdk
           wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
           unzip -q commandlinetools-linux-9477386_latest.zip
           rm commandlinetools-linux-9477386_latest.zip
-          mkdir -p cmdline-tools/latest
-          mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
-          export PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$PATH
+
+          # Перемещаем cmdline-tools в tools (как ожидает buildozer)
+          mkdir -p tools
+          mv cmdline-tools/* tools/ 2>/dev/null || true
+          chmod +x tools/bin/sdkmanager
+
+          export PATH=$HOME/android-sdk/tools/bin:$PATH
+          export ANDROID_HOME=$HOME/android-sdk
           export ANDROID_SDK_ROOT=$HOME/android-sdk
 
-          # Accept licenses
+          # Принимаем лицензии
           yes | sdkmanager --licenses > /dev/null 2>&1 || true
 
-          # Install needed components (API 30, build-tools 30.0.3, platform-tools)
+          # Устанавливаем нужные компоненты
           sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
 
           # NDK r28c
@@ -55,15 +60,16 @@ jobs:
           rm apache-ant-1.9.4-bin.tar.gz
           mv apache-ant-1.9.4/* . 2>/dev/null || true
 
-          # Set environment for buildozer
+          # Устанавливаем переменные окружения
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
           echo "ANDROID_NDK_HOME=$HOME/android-ndk" >> $GITHUB_ENV
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$HOME/android-sdk/tools/bin" >> $GITHUB_PATH
           echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
           echo "$HOME/android-ndk" >> $GITHUB_PATH
           echo "$HOME/apache-ant/bin" >> $GITHUB_PATH
 
-      - name: Build APK (using manual SDK)
+      - name: Build APK
         run: |
           buildozer android debug deploy run
 
