@@ -14,13 +14,56 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y python3-pip zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libcrypt-dev libffi-dev
+          sudo apt install -y python3-pip python3-dev zip unzip openjdk-17-jdk \
+          autoconf libtool pkg-config zlib1g-dev libcrypt-dev libffi-dev libssl-dev
 
       - name: Install buildozer
         run: |
-          pip3 install buildozer cython
+          pip3 install --no-cache-dir buildozer cython
 
-      - name: Build APK
+      - name: Set up Android SDK and NDK manually
+        run: |
+          mkdir -p $HOME/android-sdk $HOME/android-ndk $HOME/apache-ant
+
+          # SDK
+          cd $HOME/android-sdk
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip -q commandlinetools-linux-9477386_latest.zip
+          rm commandlinetools-linux-9477386_latest.zip
+          mkdir -p cmdline-tools/latest
+          mv cmdline-tools/* cmdline-tools/latest/ 2>/dev/null || true
+          export PATH=$HOME/android-sdk/cmdline-tools/latest/bin:$PATH
+          export ANDROID_SDK_ROOT=$HOME/android-sdk
+
+          # Accept licenses
+          yes | sdkmanager --licenses > /dev/null 2>&1 || true
+
+          # Install needed components (API 30, build-tools 30.0.3, platform-tools)
+          sdkmanager "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+
+          # NDK r28c
+          cd $HOME/android-ndk
+          wget -q https://dl.google.com/android/repository/android-ndk-r28c-linux.zip
+          unzip -q android-ndk-r28c-linux.zip
+          rm android-ndk-r28c-linux.zip
+          mv android-ndk-r28c/* . 2>/dev/null || true
+
+          # ANT
+          cd $HOME/apache-ant
+          wget -q https://archive.apache.org/dist/ant/binaries/apache-ant-1.9.4-bin.tar.gz
+          tar -xzf apache-ant-1.9.4-bin.tar.gz
+          rm apache-ant-1.9.4-bin.tar.gz
+          mv apache-ant-1.9.4/* . 2>/dev/null || true
+
+          # Set environment for buildozer
+          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_NDK_HOME=$HOME/android-ndk" >> $GITHUB_ENV
+          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
+          echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
+          echo "$HOME/android-ndk" >> $GITHUB_PATH
+          echo "$HOME/apache-ant/bin" >> $GITHUB_PATH
+
+      - name: Build APK (using manual SDK)
         run: |
           buildozer android debug deploy run
 
