@@ -19,7 +19,7 @@ android.ndk = 28c
 android.sdk = 30
 android.build_tools = 30.0.3
 
-# Явные пути (используем ручной SDK)
+# Явные пути к нашему SDK/NDK (чтобы buildozer не искал своё)
 android.sdk_path = /home/runner/android-sdk
 android.ndk_path = /home/runner/android-ndk
 android.ant_path = /home/runner/apache-ant
