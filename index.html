@@ -3,327 +3,445 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>ZERO TRACE // VZLOI GROUP</title>
+<title>Мамкин Скамер VPN</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
-  background:#050505;color:#e2e8f0;
-  -webkit-font-smoothing:antialiased;
-  font-feature-settings:'ss01','cv01','tnum','zero';
-}
-:root{
-  --bg:#050505;--surface:#0a0b0e;--surface2:#111319;--press:#1a1d24;
-  --line:rgba(255,255,255,.06);--line2:rgba(255,255,255,.12);
-  --green:#10b981;--blue:#3b82f6;--orange:#f59e0b;
-  --white:#ffffff;--t1:#e2e8f0;--t2:#64748b;--t3:#334155;
-  --r:6px;--r-sm:4px;--th:64px;
-  --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Mono",Consolas,monospace;
-}
-.app{height:100%;display:flex;flex-direction:column;max-width:440px;margin:0 auto;position:relative;overflow:hidden}
-.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 20px calc(var(--th) + env(safe-area-inset-bottom) + 24px)}
-.scroll::-webkit-scrollbar{display:none}
-.pg{display:none}.pg.on{display:block}
+  /* ===== БАЗОВЫЕ НАСТРОЙКИ И ПЕРЕМЕННЫЕ ===== */
+  :root {
+    --bg: #0a0a0c;
+    --surface: #121215;
+    --surface2: #1a1a1f;
+    --surface3: #222228;
+    --line: rgba(255, 255, 255, 0.06);
+    --line2: rgba(255, 255, 255, 0.12);
+    --white: #ffffff;
+    --t1: #f4f4f5;
+    --t2: #a1a1aa;
+    --t3: #52525b;
+    --green: #22c55e;
+    --blue: #3b82f6;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --r: 14px;
+    --r-sm: 10px;
+    --th: 72px;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+  }
 
-/* HERO */
-.hero{padding:32px 0 24px;position:relative}
-.hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
-.hero-brand{display:flex;align-items:center;gap:14px;margin-bottom:24px}
-.hero-mark{
-  width:44px;height:44px;border-radius:6px;
-  background:var(--surface);border:1px solid var(--line2);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
-}
-.hero-mark svg{width:20px;height:20px;fill:var(--white)}
-.hero-name{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--white);letter-spacing:.05em;text-transform:uppercase}
-.hero-title{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--white);line-height:1.1}
-.hero-title em{font-style:normal;color:var(--t2)}
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--t1);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: 'ss01', 'cv01', 'tnum', 'zero';
+  }
 
-/* STATUS CARD */
-.status-card{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  padding:20px 16px;margin-top:20px;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
-}
-.status-card.active{border-color:rgba(16,185,129,.3)}
-.sc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.sc-title{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em}
-.sc-badge{
-  font-family:var(--mono);font-size:10px;font-weight:700;
-  padding:4px 10px;border-radius:4px;
-  background:rgba(255,255,255,.05);color:var(--t2);
-  border:1px solid var(--line);text-transform:uppercase;letter-spacing:.05em;
-  display:flex;align-items:center;gap:6px;
-}
-.status-card.active .sc-badge{color:var(--green);border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.05)}
-.dot{width:6px;height:6px;border-radius:50%;background:var(--t3)}
-.status-card.active .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+  .app { height: 100%; display: flex; flex-direction: column; max-width: 440px; margin: 0 auto; position: relative; overflow: hidden; }
+  .scroll { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 0 20px calc(var(--th) + env(safe-area-inset-bottom) + 24px); }
+  .scroll::-webkit-scrollbar { display: none; }
 
-.sc-data{display:flex;gap:40px}
-.sc-item .val{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--white)}
-.sc-item .lbl{font-family:var(--mono);font-size:9.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+  .pg { display: none; }
+  .pg.on { display: block; animation: fadeIn 0.3s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-/* BUTTON */
-.confirm-wrap{margin-top:16px}
-.confirm-btn{
-  display:flex;align-items:center;justify-content:center;
-  width:100%;height:52px;background:var(--white);border:none;border-radius:var(--r);
-  cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:700;color:#000;
-  text-transform:uppercase;letter-spacing:.05em;transition:opacity .1s;
-}
-.confirm-btn:active{opacity:.8}
+  /* ===== ШАПКА (HERO) ===== */
+  .hero { padding: 32px 0 24px; text-align: center; }
+  .hero-mark {
+    width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px;
+    background: linear-gradient(145deg, var(--surface2), var(--surface));
+    border: 1px solid var(--line2);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  .hero-mark svg { width: 30px; height: 30px; fill: var(--white); }
+  .hero-title { font-size: 26px; font-weight: 800; letter-spacing: -0.03em; color: var(--white); line-height: 1.1; }
+  .hero-sub { font-size: 13px; color: var(--t2); margin-top: 8px; font-weight: 500; }
 
-/* NODES (Keys) */
-.nodes-container{display:none;margin-top:16px;flex-direction:column;gap:12px}
-.nodes-container.show{display:flex}
+  /* ===== КАРТОЧКА СТАТУСА ===== */
+  .status-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 20px; margin-top: 24px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .status-card.active {
+    border-color: rgba(34, 197, 94, 0.35);
+    background: linear-gradient(180deg, rgba(34, 197, 94, 0.04) 0%, var(--surface) 100%);
+  }
+  .sc-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
+  .sc-title { font-size: 13px; font-weight: 600; color: var(--t2); text-transform: uppercase; letter-spacing: 0.04em; }
+  .sc-badge {
+    font-family: var(--mono); font-size: 10px; font-weight: 700;
+    padding: 5px 12px; border-radius: 20px;
+    background: var(--surface2); color: var(--t2);
+    border: 1px solid var(--line); text-transform: uppercase; letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .status-card.active .sc-badge { color: var(--green); border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.1); }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--t3); transition: background 0.3s; }
+  .status-card.active .dot { background: var(--green); box-shadow: 0 0 10px var(--green); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-.node-card{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
-  padding:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
-}
-.node-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.node-title{font-family:var(--mono);font-size:12px;color:var(--white);text-transform:uppercase;letter-spacing:.05em;font-weight:700;display:flex;align-items:center;gap:8px}
-.node-title svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+  .sc-data { display: flex; gap: 32px; }
+  .sc-item .val { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--white); }
+  .sc-item .lbl { font-size: 10px; color: var(--t2); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.04em; }
 
-.node-social .node-title{color:var(--blue)}
-.node-gaming .node-title{color:var(--orange)}
+  /* ===== КНОПКИ ===== */
+  .confirm-wrap { margin-top: 20px; }
+  .confirm-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%; height: 56px; background: var(--white); border: none; border-radius: var(--r);
+    cursor: pointer; font-size: 15px; font-weight: 800; color: #000;
+    transition: transform 0.1s, opacity 0.1s; text-transform: uppercase; letter-spacing: 0.02em;
+  }
+  .confirm-btn:active { transform: scale(0.98); opacity: 0.9; }
+  .confirm-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .confirm-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2.5; }
 
-.node-badge{font-family:var(--mono);font-size:9px;color:var(--t2);padding:2px 6px;border:1px solid var(--line2);border-radius:4px;text-transform:uppercase}
-.node-desc{font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.4}
-.key-val{
-  font-family:var(--mono);font-size:10px;color:var(--t1);word-break:break-all;
-  background:#000;padding:12px;border-radius:4px;border:1px solid var(--line);
-  line-height:1.5;max-height:60px;overflow-y:auto;margin-bottom:12px;
-}
-.copy-btn{
-  width:100%;padding:10px;background:var(--surface2);border:1px solid var(--line2);
-  border-radius:var(--r-sm);color:var(--white);font-family:var(--mono);font-size:11px;
-  font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;
-  transition:background .1s;
-}
-.copy-btn:active{background:var(--press)}
+  /* ===== БЛОКИ С КЛЮЧАМИ ===== */
+  .nodes-container { display: none; margin-top: 16px; flex-direction: column; gap: 12px; }
+  .nodes-container.show { display: flex; animation: fadeIn 0.3s ease; }
 
-/* PROFILE */
-.prof{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:20px;margin-top:20px}
-.prof .ava{width:48px;height:48px;border-radius:6px;background:var(--surface2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
-.prof .ava svg{width:20px;height:20px;stroke:var(--t2);stroke-width:1.5;fill:none}
-.pname{font-size:15px;font-weight:600;color:var(--white)}
-.pmeta{font-family:var(--mono);font-size:12px;color:var(--t2);margin-top:4px}
+  .node-card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: var(--r);
+    padding: 18px; transition: border-color 0.2s;
+  }
+  .node-card:hover { border-color: var(--line2); }
+  .node-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .node-title { font-size: 14px; font-weight: 700; color: var(--white); display: flex; align-items: center; gap: 10px; }
+  .node-title svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.8; }
+  .node-social .node-title { color: var(--blue); }
+  .node-gaming .node-title { color: var(--orange); }
+  .node-badge { font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--t2); padding: 3px 8px; border: 1px solid var(--line2); border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .node-desc { font-size: 12px; color: var(--t2); margin-bottom: 14px; line-height: 1.4; }
 
-/* TABS */
-.tab-bar{position:fixed;bottom:0;left:0;right:0;height:calc(var(--th) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--bg);border-top:1px solid var(--line);display:flex;z-index:90;max-width:440px;margin:0 auto}
-.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:var(--t3);transition:color .1s;padding:8px 0}
-.tab.on{color:var(--white)}
-.tab svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
-.tab span{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+  .key-val {
+    font-family: var(--mono); font-size: 10px; color: var(--t1); word-break: break-all;
+    background: #000; padding: 12px; border-radius: var(--r-sm); border: 1px solid var(--line);
+    line-height: 1.6; max-height: 64px; overflow-y: auto; margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .key-val::-webkit-scrollbar { width: 3px; }
+  .key-val::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 3px; }
 
-/* TOAST */
-.toast{position:fixed;bottom:calc(var(--th) + env(safe-area-inset-bottom) + 16px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:12px 20px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--white);opacity:0;transition:opacity .1s,transform .1s;z-index:200;pointer-events:none;white-space:nowrap;text-transform:uppercase}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  .copy-btn {
+    width: 100%; padding: 12px; background: var(--surface2); border: 1px solid var(--line2);
+    border-radius: var(--r-sm); color: var(--white); font-size: 12px; font-weight: 700;
+    cursor: pointer; transition: background 0.15s, transform 0.1s;
+    text-transform: uppercase; letter-spacing: 0.04em; display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .copy-btn:active { transform: scale(0.98); background: var(--surface3); }
+  .copy-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .copy-btn.success { background: rgba(34, 197, 94, 0.15); border-color: var(--green); color: var(--green); }
 
-/* FOOTER */
-.foot{margin-top:32px;padding:16px 0 0;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--t3);text-align:center;line-height:1.8;letter-spacing:.05em}
+  /* ===== ПРОФИЛЬ ===== */
+  .prof { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 20px; }
+  .prof .ava { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, var(--surface2), var(--surface3)); border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; }
+  .prof .ava svg { width: 24px; height: 24px; stroke: var(--t2); stroke-width: 1.5; fill: none; }
+  .pname { font-size: 16px; font-weight: 700; color: var(--white); }
+  .pmeta { font-family: var(--mono); font-size: 12px; color: var(--t2); margin-top: 4px; }
+
+  /* ===== ТАБ-БАР ===== */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--th) + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(10, 10, 12, 0.85); backdrop-filter: blur(16px);
+    border-top: 1px solid var(--line);
+    display: flex; z-index: 90; max-width: 440px; margin: 0 auto;
+  }
+  .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; cursor: pointer; color: var(--t3); transition: color 0.2s; padding: 8px 0; }
+  .tab.on { color: var(--white); }
+  .tab svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.8; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .tab span { font-family: var(--mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+
+  /* ===== ТОСТ ===== */
+  .toast {
+    position: fixed; bottom: calc(var(--th) + env(safe-area-inset-bottom) + 16px);
+    left: 50%; transform: translateX(-50%) translateY(10px);
+    background: var(--surface3); border: 1px solid var(--line2); border-radius: 24px;
+    padding: 12px 22px; font-size: 13px; font-weight: 600; color: var(--white);
+    opacity: 0; transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); z-index: 200; pointer-events: none; white-space: nowrap;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ===== ФУТЕР ===== */
+  .foot { margin-top: 32px; padding: 16px 0 0; border-top: 1px solid var(--line); font-family: var(--mono); font-size: 10px; color: var(--t3); text-align: center; line-height: 1.8; letter-spacing: 0.04em; }
 </style>
 </head>
 <body>
 <div class="app">
 <div class="scroll" id="main-scroll">
 
-  <!-- HOME -->
+  <!-- ===== ГЛАВНАЯ ===== -->
   <div class="pg on" id="pg-home">
     <div class="hero">
-      <div class="hero-brand">
-        <div class="hero-mark">
-          <!-- Логотип VZLOI GROUP / ZERO TRACE (Абстрактный щит/след) -->
-          <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11 5.25-.85 9-5.75 9-11V7l-9-5z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M8 12l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
-        </div>
-        <span class="hero-name">Zero Trace</span>
+      <div class="hero-mark">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
       </div>
-      <h1 class="hero-title">Терминал<br>доступа</h1>
+      <h1 class="hero-title">Мамкин Скамер</h1>
+      <div class="hero-sub">Туннель в нормальный интернет</div>
     </div>
 
     <div class="status-card" id="status-card">
       <div class="sc-head">
-        <div class="sc-title">Статус системы</div>
-        <div class="sc-badge" id="ui-status"><span class="dot"></span> OFFLINE</div>
+        <div class="sc-title">Статус доступа</div>
+        <div class="sc-badge" id="ui-status"><span class="dot"></span> ОЖИДАНИЕ</div>
       </div>
       <div class="sc-data">
         <div class="sc-item">
-          <div class="val" id="ui-expiry">...</div>
-          <div class="lbl">Активен до</div>
+          <div class="val" id="ui-expiry">—</div>
+          <div class="lbl">Действует до</div>
         </div>
         <div class="sc-item">
           <div class="val" id="ui-traffic">0 GB</div>
-          <div class="lbl">Трафик</div>
+          <div class="lbl">Скачано</div>
         </div>
       </div>
     </div>
 
     <div class="confirm-wrap">
-      <button class="confirm-btn" id="btn-connect" onclick="toggleKeys()" disabled>Синхронизация...</button>
+      <button class="confirm-btn" id="btn-connect" onclick="toggleKeys()" disabled>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        Стучимся на сервер
+      </button>
     </div>
 
-    <!-- БЛОК С КЛЮЧАМИ -->
     <div class="nodes-container" id="nodes-container">
-      
-      <!-- Соцсети (VLESS) -->
+      <!-- Social Node -->
       <div class="node-card node-social">
         <div class="node-header">
           <div class="node-title">
-            <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.39 0 4.68.94 6.36 2.64M21 3v6h-6"/></svg>
-            SOCIAL NODE
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+            Для соцсетей
           </div>
           <div class="node-badge">VLESS</div>
         </div>
-        <div class="node-desc">YouTube, Telegram, TikTok и стриминг.</div>
-        <div class="key-val" id="key-social">...</div>
-        <button class="copy-btn" onclick="copyKey('social')">Копировать</button>
+        <div class="node-desc">Спасает от блокировок, грузит 4K без буферизации</div>
+        <div class="key-val" id="key-social">Нет данных</div>
+        <button class="copy-btn" onclick="copyKey('social')">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Скопировать конфиг</span>
+        </button>
       </div>
 
-      <!-- Игры (Hysteria2) -->
+      <!-- Gaming Node -->
       <div class="node-card node-gaming">
         <div class="node-header">
           <div class="node-title">
-            <svg viewBox="0 0 24 24"><path d="M6 12h4m-2-2v4m6-2h.01M18 12h.01M7 21h10a4 4 0 0 0 4-4V7a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v10a4 4 0 0 0 4 4z"/></svg>
-            GAMING NODE
+            <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4"/><path d="M8 10v4"/><path d="M15 13h.01"/><path d="M18 11h.01"/></svg>
+            Для игр
           </div>
           <div class="node-badge">HYSTERIA2</div>
         </div>
-        <div class="node-desc">Турбо-режим с минимальным пингом.</div>
-        <div class="key-val" id="key-gaming">...</div>
-        <button class="copy-btn" onclick="copyKey('gaming')">Копировать</button>
+        <div class="node-desc">Пинг в ефутболе не дропает, UDP-туннель</div>
+        <div class="key-val" id="key-gaming">Нет данных</div>
+        <button class="copy-btn" onclick="copyKey('gaming')">
+          <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          <span>Скопировать конфиг</span>
+        </button>
       </div>
-
     </div>
 
     <div class="foot">
-      <div>VZLOI GROUP © 2026</div>
+      <div>© 2026 Мамкин Скамер // Твой доступ без границ</div>
     </div>
   </div>
 
-  <!-- PROFILE -->
+  <!-- ===== ПРОФИЛЬ ===== -->
   <div class="pg" id="pg-profile">
-    <div style="padding:32px 0 16px">
-      <div style="font-family:var(--mono);font-size:10px;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px">ДАННЫЕ</div>
-      <h1 style="font-size:28px;font-weight:700;letter-spacing:-.03em;color:var(--white)">Аккаунт</h1>
+    <div style="padding: 32px 0 16px">
+      <h1 style="font-size: 26px; font-weight: 800; letter-spacing: -0.03em; color: var(--white);">Твой профиль</h1>
     </div>
 
     <div class="prof">
-      <div class="ava"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div class="ava">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
       <div>
-        <div class="pname" id="p-name">...</div>
+        <div class="pname" id="p-name">Загрузка...</div>
         <div class="pmeta" id="p-meta">Telegram</div>
       </div>
     </div>
 
-    <div class="foot" style="border:none;margin-top:10px">
-      <div>Разработка: VZLOI GROUP</div>
-      <div>Все права защищены.</div>
+    <div class="status-card" style="margin-top: 0">
+      <div class="sc-head" style="margin-bottom: 8px">
+        <div class="sc-title">Если что-то сломалось</div>
+      </div>
+      <div style="font-size: 13px; color: var(--t2); margin-bottom: 16px; line-height: 1.5;">Пиши сюда, если не работает или нужна помощь</div>
+      <a href="https://t.me/foskza" target="_blank" style="text-decoration: none;">
+        <button class="copy-btn">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          <span>Написать в поддержку</span>
+        </button>
+      </a>
+    </div>
+
+    <div class="foot" style="border: none; margin-top: 10px">
+      <div>Разработано в гараже</div>
+      <div>Все бабки ушли на сервера</div>
     </div>
   </div>
 
 </div>
 
-<!-- TAB BAR -->
+<!-- ===== ТАБ-БАР ===== -->
 <div class="tab-bar">
-  <div class="tab on" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Сеть</span></div>
-  <div class="tab" onclick="go('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Профиль</span></div>
+  <div class="tab on" onclick="go('home')">
+    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span>Главная</span>
+  </div>
+  <div class="tab" onclick="go('profile')">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span>Профиль</span>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
 </div>
 
 <script>
-const tg = window.Telegram?.WebApp;
-// ВСТАВЛЕНА ТВОЯ ССЫЛКА CLOUDFLARE:
-const API_URL = 'https://deposits-surrounded-ipod-arrow.trycloudflare.com'; 
+  const tg = window.Telegram?.WebApp;
+  // Вшитая ссылка на твой сервер
+  const API_URL = 'https://ivory-basis-publisher-mother.trycloudflare.com';
 
-let userData = null;
+  let userData = null;
 
-if(tg){
-  tg.ready(); tg.expand(); tg.setHeaderColor('#050505'); tg.setBackgroundColor('#050505');
-  const u = tg.initDataUnsafe?.user;
-  if(u){
-    document.getElementById('p-name').textContent = [u.first_name, u.last_name].filter(Boolean).join(' ') || 'Юзер';
-    document.getElementById('p-meta').textContent = u.username ? '@'+u.username : 'id '+u.id;
-  }
-  fetchUser();
-}
-
-async function fetchUser(){
-  try {
-    const res = await fetch(API_URL + '/api/user', { headers: { 'x-init-data': tg.initData } });
-    if(!res.ok) throw new Error('API error');
-    userData = await res.json();
-    render();
-  } catch(e) {
-    console.error(e);
-    userData = { active:false, expiry:'ERR', traffic:0, keys:{} };
-    render();
-  }
-}
-
-function render(){
-  const card = document.getElementById('status-card');
-  const badge = document.getElementById('ui-status');
-  const btn = document.getElementById('btn-connect');
-  
-  btn.disabled = false;
-
-  if(userData.active){
-    card.classList.add('active');
-    badge.innerHTML = '<span class="dot"></span> ONLINE';
-    btn.textContent = 'Показать ключи';
-    document.getElementById('ui-expiry').textContent = userData.expiry;
-    document.getElementById('ui-traffic').textContent = (userData.traffic || 0) + ' GB';
+  // Инициализация Telegram
+  if (tg) {
+    tg.ready();
+    tg.expand();
+    tg.setHeaderColor('#0a0a0c');
+    tg.setBackgroundColor('#0a0a0c');
     
-    document.getElementById('key-social').textContent = userData.keys.social || 'ERR';
-    document.getElementById('key-gaming').textContent = userData.keys.gaming || 'ERR';
-  } else {
-    card.classList.remove('active');
-    badge.innerHTML = '<span class="dot"></span> OFFLINE';
-    btn.textContent = 'Купить доступ';
-    document.getElementById('ui-expiry').textContent = '--.--.----';
-    document.getElementById('ui-traffic').textContent = '0 GB';
+    const u = tg.initDataUnsafe?.user;
+    if (u) {
+      document.getElementById('p-name').textContent = [u.first_name, u.last_name].filter(Boolean).join(' ') || 'Пользователь';
+      document.getElementById('p-meta').textContent = u.username ? '@' + u.username : 'ID: ' + u.id;
+    }
+    fetchUser();
   }
-}
 
-function toggleKeys(){
-  if(!userData?.active){ 
-    showToast('Требуется активация');
-    if(tg) tg.close(); 
-    return; 
+  // Загрузка данных с API
+  async function fetchUser() {
+    try {
+      const res = await fetch(API_URL + '/api/user', { headers: { 'x-init-data': tg.initData } });
+      if (!res.ok) throw new Error('API Error');
+      userData = await res.json();
+      render();
+    } catch (e) {
+      console.error(e);
+      document.getElementById('btn-connect').textContent = 'Сервер не отвечает';
+      document.getElementById('ui-status').innerHTML = '<span class="dot" style="background:var(--red)"></span> ОШИБКА';
+    }
   }
-  const container = document.getElementById('nodes-container');
-  container.classList.toggle('show');
-  document.getElementById('btn-connect').textContent = container.classList.contains('show') ? 'Скрыть' : 'Показать ключи';
-}
 
-function copyKey(type){
-  const el = document.getElementById(type === 'social' ? 'key-social' : 'key-gaming');
-  navigator.clipboard.writeText(el.textContent).then(()=>{
-    showToast('Скопировано');
-    if(tg) tg.HapticFeedback?.notificationOccurred('success');
-  });
-}
+  // Отрисовка интерфейса
+  function render() {
+    const card = document.getElementById('status-card');
+    const badge = document.getElementById('ui-status');
+    const btn = document.getElementById('btn-connect');
+    
+    btn.disabled = false;
 
-function go(name){
-  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
-  document.getElementById('pg-'+name).classList.add('on');
-  document.querySelectorAll('.tab')[name==='home'?0:1].classList.add('on');
-  document.getElementById('main-scroll').scrollTop = 0;
-}
+    if (userData.active) {
+      card.classList.add('active');
+      badge.innerHTML = '<span class="dot"></span> ONLINE';
+      btn.textContent = 'Достать ключи';
+      
+      document.getElementById('ui-expiry').textContent = userData.expiry || '—';
+      document.getElementById('ui-traffic').textContent = (userData.traffic || 0) + ' GB';
+      
+      document.getElementById('key-social').textContent = userData.keys.social || 'Нет данных';
+      document.getElementById('key-gaming').textContent = userData.keys.gaming || 'Нет данных';
+    } else {
+      card.classList.remove('active');
+      badge.innerHTML = '<span class="dot"></span> OFFLINE';
+      btn.textContent = 'Купить доступ в боте';
+      
+      document.getElementById('ui-expiry').textContent = '—';
+      document.getElementById('ui-traffic').textContent = '0 GB';
+    }
+  }
 
-let _tt;
-function showToast(t){
-  const el = document.getElementById('toast');
-  el.textContent = t; el.classList.add('show');
-  clearTimeout(_tt); _tt = setTimeout(()=>el.classList.remove('show'), 2000);
-}
+  // Показать/скрыть ключи
+  function toggleKeys() {
+    if (!userData?.active) {
+      showToast('Сначала купи доступ');
+      setTimeout(() => { if (tg) tg.close(); }, 1200);
+      return;
+    }
+    
+    const container = document.getElementById('nodes-container');
+    const btn = document.getElementById('btn-connect');
+    const isHidden = container.classList.toggle('show');
+    
+    btn.textContent = isHidden ? 'Скрыть ключи' : 'Достать ключи';
+    if (tg) tg.HapticFeedback?.impactOccurred('light');
+  }
+
+  // Копирование ключа
+  function copyKey(type) {
+    const elId = type === 'social' ? 'key-social' : 'key-gaming';
+    const el = document.getElementById(elId);
+    const btn = el.nextElementSibling;
+    const text = el.textContent;
+
+    if (text === 'Нет данных' || !text) return;
+
+    // Универсальный метод копирования (работает везде)
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(showSuccess);
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try { document.execCommand('copy'); showSuccess(); } 
+      catch (err) { showToast('Ошибка копирования'); }
+      document.body.removeChild(textArea);
+    }
+
+    function showSuccess() {
+      showToast('Конфиг скопирован');
+      if (tg) tg.HapticFeedback?.notificationOccurred('success');
+      
+      // Визуальный фидбек на кнопке
+      const originalHTML = btn.innerHTML;
+      btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg><span>Готово</span>';
+      btn.classList.add('success');
+      
+      setTimeout(() => {
+        btn.innerHTML = originalHTML;
+        btn.classList.remove('success');
+      }, 2000);
+    }
+  }
+
+  // Переключение вкладок
+  function go(name) {
+    document.querySelectorAll('.pg').forEach(p => p.classList.remove('on')); 
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+    
+    document.getElementById('pg-' + name).classList.add('on'); 
+    document.querySelectorAll('.tab')[name === 'home' ? 0 : 1].classList.add('on');
+    
+    document.getElementById('main-scroll').scrollTop = 0; 
+    if (tg) tg.HapticFeedback?.impactOccurred('light');
+  }
+
+  // Всплывающее уведомление (Тост)
+  let _tt;
+  function showToast(t) {
+    const el = document.getElementById('toast');
+    el.textContent = t; 
+    el.classList.add('show');
+    clearTimeout(_tt); 
+    _tt = setTimeout(() => el.classList.remove('show'), 2200);
+  }
 </script>
 </body>
 </html>
