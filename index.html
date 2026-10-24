@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ZERO TRACE // VZLOI GROUP</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
+  background:#050505;color:#e2e8f0;
+  -webkit-font-smoothing:antialiased;
+  font-feature-settings:'ss01','cv01','tnum','zero';
+}
+:root{
+  --bg:#050505;--surface:#0a0b0e;--surface2:#111319;--press:#1a1d24;
+  --line:rgba(255,255,255,.06);--line2:rgba(255,255,255,.12);
+  --green:#10b981;--blue:#3b82f6;--orange:#f59e0b;
+  --white:#ffffff;--t1:#e2e8f0;--t2:#64748b;--t3:#334155;
+  --r:6px;--r-sm:4px;--th:64px;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono","Cascadia Mono",Consolas,monospace;
+}
+.app{height:100%;display:flex;flex-direction:column;max-width:440px;margin:0 auto;position:relative;overflow:hidden}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:0 20px calc(var(--th) + env(safe-area-inset-bottom) + 24px)}
+.scroll::-webkit-scrollbar{display:none}
+.pg{display:none}.pg.on{display:block}
+
+/* HERO */
+.hero{padding:32px 0 24px;position:relative}
+.hero::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
+.hero-brand{display:flex;align-items:center;gap:14px;margin-bottom:24px}
+.hero-mark{
+  width:44px;height:44px;border-radius:6px;
+  background:var(--surface);border:1px solid var(--line2);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.hero-mark svg{width:20px;height:20px;fill:var(--white)}
+.hero-name{font-family:var(--mono);font-size:18px;font-weight:700;color:var(--white);letter-spacing:.05em;text-transform:uppercase}
+.hero-title{font-size:28px;font-weight:700;letter-spacing:-.02em;color:var(--white);line-height:1.1}
+.hero-title em{font-style:normal;color:var(--t2)}
+
+/* STATUS CARD */
+.status-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px 16px;margin-top:20px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
+}
+.status-card.active{border-color:rgba(16,185,129,.3)}
+.sc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.sc-title{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.05em}
+.sc-badge{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  padding:4px 10px;border-radius:4px;
+  background:rgba(255,255,255,.05);color:var(--t2);
+  border:1px solid var(--line);text-transform:uppercase;letter-spacing:.05em;
+  display:flex;align-items:center;gap:6px;
+}
+.status-card.active .sc-badge{color:var(--green);border-color:rgba(16,185,129,.3);background:rgba(16,185,129,.05)}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--t3)}
+.status-card.active .dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+
+.sc-data{display:flex;gap:40px}
+.sc-item .val{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--white)}
+.sc-item .lbl{font-family:var(--mono);font-size:9.5px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+
+/* BUTTON */
+.confirm-wrap{margin-top:16px}
+.confirm-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:52px;background:var(--white);border:none;border-radius:var(--r);
+  cursor:pointer;font-family:var(--mono);font-size:13px;font-weight:700;color:#000;
+  text-transform:uppercase;letter-spacing:.05em;transition:opacity .1s;
+}
+.confirm-btn:active{opacity:.8}
+
+/* NODES (Keys) */
+.nodes-container{display:none;margin-top:16px;flex-direction:column;gap:12px}
+.nodes-container.show{display:flex}
+
+.node-card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;box-shadow:inset 0 1px 0 rgba(255,255,255,.02);
+}
+.node-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.node-title{font-family:var(--mono);font-size:12px;color:var(--white);text-transform:uppercase;letter-spacing:.05em;font-weight:700;display:flex;align-items:center;gap:8px}
+.node-title svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+
+.node-social .node-title{color:var(--blue)}
+.node-gaming .node-title{color:var(--orange)}
+
+.node-badge{font-family:var(--mono);font-size:9px;color:var(--t2);padding:2px 6px;border:1px solid var(--line2);border-radius:4px;text-transform:uppercase}
+.node-desc{font-size:12px;color:var(--t2);margin-bottom:12px;line-height:1.4}
+.key-val{
+  font-family:var(--mono);font-size:10px;color:var(--t1);word-break:break-all;
+  background:#000;padding:12px;border-radius:4px;border:1px solid var(--line);
+  line-height:1.5;max-height:60px;overflow-y:auto;margin-bottom:12px;
+}
+.copy-btn{
+  width:100%;padding:10px;background:var(--surface2);border:1px solid var(--line2);
+  border-radius:var(--r-sm);color:var(--white);font-family:var(--mono);font-size:11px;
+  font-weight:700;text-transform:uppercase;letter-spacing:.05em;cursor:pointer;
+  transition:background .1s;
+}
+.copy-btn:active{background:var(--press)}
+
+/* PROFILE */
+.prof{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:20px;margin-top:20px}
+.prof .ava{width:48px;height:48px;border-radius:6px;background:var(--surface2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center}
+.prof .ava svg{width:20px;height:20px;stroke:var(--t2);stroke-width:1.5;fill:none}
+.pname{font-size:15px;font-weight:600;color:var(--white)}
+.pmeta{font-family:var(--mono);font-size:12px;color:var(--t2);margin-top:4px}
+
+/* TABS */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;height:calc(var(--th) + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:var(--bg);border-top:1px solid var(--line);display:flex;z-index:90;max-width:440px;margin:0 auto}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:var(--t3);transition:color .1s;padding:8px 0}
+.tab.on{color:var(--white)}
+.tab svg{width:20px;height:20px;stroke:currentColor;stroke-width:1.8;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tab span{font-family:var(--mono);font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+
+/* TOAST */
+.toast{position:fixed;bottom:calc(var(--th) + env(safe-area-inset-bottom) + 16px);left:50%;transform:translateX(-50%) translateY(10px);background:var(--surface2);border:1px solid var(--line2);border-radius:4px;padding:12px 20px;font-family:var(--mono);font-size:12px;font-weight:600;color:var(--white);opacity:0;transition:opacity .1s,transform .1s;z-index:200;pointer-events:none;white-space:nowrap;text-transform:uppercase}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* FOOTER */
+.foot{margin-top:32px;padding:16px 0 0;border-top:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--t3);text-align:center;line-height:1.8;letter-spacing:.05em}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="scroll" id="main-scroll">
+
+  <!-- HOME -->
+  <div class="pg on" id="pg-home">
+    <div class="hero">
+      <div class="hero-brand">
+        <div class="hero-mark">
+          <!-- Логотип VZLOI GROUP / ZERO TRACE (Абстрактный щит/след) -->
+          <svg viewBox="0 0 24 24"><path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11 5.25-.85 9-5.75 9-11V7l-9-5z" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><path d="M8 12l3 3 5-5" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        </div>
+        <span class="hero-name">Zero Trace</span>
+      </div>
+      <h1 class="hero-title">Терминал<br>доступа</h1>
+    </div>
+
+    <div class="status-card" id="status-card">
+      <div class="sc-head">
+        <div class="sc-title">Статус системы</div>
+        <div class="sc-badge" id="ui-status"><span class="dot"></span> OFFLINE</div>
+      </div>
+      <div class="sc-data">
+        <div class="sc-item">
+          <div class="val" id="ui-expiry">...</div>
+          <div class="lbl">Активен до</div>
+        </div>
+        <div class="sc-item">
+          <div class="val" id="ui-traffic">0 GB</div>
+          <div class="lbl">Трафик</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="confirm-wrap">
+      <button class="confirm-btn" id="btn-connect" onclick="toggleKeys()" disabled>Синхронизация...</button>
+    </div>
+
+    <!-- БЛОК С КЛЮЧАМИ -->
+    <div class="nodes-container" id="nodes-container">
+      
+      <!-- Соцсети (VLESS) -->
+      <div class="node-card node-social">
+        <div class="node-header">
+          <div class="node-title">
+            <svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.39 0 4.68.94 6.36 2.64M21 3v6h-6"/></svg>
+            SOCIAL NODE
+          </div>
+          <div class="node-badge">VLESS</div>
+        </div>
+        <div class="node-desc">YouTube, Telegram, TikTok и стриминг.</div>
+        <div class="key-val" id="key-social">...</div>
+        <button class="copy-btn" onclick="copyKey('social')">Копировать</button>
+      </div>
+
+      <!-- Игры (Hysteria2) -->
+      <div class="node-card node-gaming">
+        <div class="node-header">
+          <div class="node-title">
+            <svg viewBox="0 0 24 24"><path d="M6 12h4m-2-2v4m6-2h.01M18 12h.01M7 21h10a4 4 0 0 0 4-4V7a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v10a4 4 0 0 0 4 4z"/></svg>
+            GAMING NODE
+          </div>
+          <div class="node-badge">HYSTERIA2</div>
+        </div>
+        <div class="node-desc">Турбо-режим с минимальным пингом.</div>
+        <div class="key-val" id="key-gaming">...</div>
+        <button class="copy-btn" onclick="copyKey('gaming')">Копировать</button>
+      </div>
+
+    </div>
+
+    <div class="foot">
+      <div>VZLOI GROUP © 2026</div>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div class="pg" id="pg-profile">
+    <div style="padding:32px 0 16px">
+      <div style="font-family:var(--mono);font-size:10px;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px">ДАННЫЕ</div>
+      <h1 style="font-size:28px;font-weight:700;letter-spacing:-.03em;color:var(--white)">Аккаунт</h1>
+    </div>
+
+    <div class="prof">
+      <div class="ava"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+      <div>
+        <div class="pname" id="p-name">...</div>
+        <div class="pmeta" id="p-meta">Telegram</div>
+      </div>
+    </div>
+
+    <div class="foot" style="border:none;margin-top:10px">
+      <div>Разработка: VZLOI GROUP</div>
+      <div>Все права защищены.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TAB BAR -->
+<div class="tab-bar">
+  <div class="tab on" onclick="go('home')"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Сеть</span></div>
+  <div class="tab" onclick="go('profile')"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Профиль</span></div>
+</div>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+const tg = window.Telegram?.WebApp;
+// ВСТАВЛЕНА ТВОЯ ССЫЛКА CLOUDFLARE:
+const API_URL = 'https://deposits-surrounded-ipod-arrow.trycloudflare.com'; 
+
+let userData = null;
+
+if(tg){
+  tg.ready(); tg.expand(); tg.setHeaderColor('#050505'); tg.setBackgroundColor('#050505');
+  const u = tg.initDataUnsafe?.user;
+  if(u){
+    document.getElementById('p-name').textContent = [u.first_name, u.last_name].filter(Boolean).join(' ') || 'Юзер';
+    document.getElementById('p-meta').textContent = u.username ? '@'+u.username : 'id '+u.id;
+  }
+  fetchUser();
+}
+
+async function fetchUser(){
+  try {
+    const res = await fetch(API_URL + '/api/user', { headers: { 'x-init-data': tg.initData } });
+    if(!res.ok) throw new Error('API error');
+    userData = await res.json();
+    render();
+  } catch(e) {
+    console.error(e);
+    userData = { active:false, expiry:'ERR', traffic:0, keys:{} };
+    render();
+  }
+}
+
+function render(){
+  const card = document.getElementById('status-card');
+  const badge = document.getElementById('ui-status');
+  const btn = document.getElementById('btn-connect');
+  
+  btn.disabled = false;
+
+  if(userData.active){
+    card.classList.add('active');
+    badge.innerHTML = '<span class="dot"></span> ONLINE';
+    btn.textContent = 'Показать ключи';
+    document.getElementById('ui-expiry').textContent = userData.expiry;
+    document.getElementById('ui-traffic').textContent = (userData.traffic || 0) + ' GB';
+    
+    document.getElementById('key-social').textContent = userData.keys.social || 'ERR';
+    document.getElementById('key-gaming').textContent = userData.keys.gaming || 'ERR';
+  } else {
+    card.classList.remove('active');
+    badge.innerHTML = '<span class="dot"></span> OFFLINE';
+    btn.textContent = 'Купить доступ';
+    document.getElementById('ui-expiry').textContent = '--.--.----';
+    document.getElementById('ui-traffic').textContent = '0 GB';
+  }
+}
+
+function toggleKeys(){
+  if(!userData?.active){ 
+    showToast('Требуется активация');
+    if(tg) tg.close(); 
+    return; 
+  }
+  const container = document.getElementById('nodes-container');
+  container.classList.toggle('show');
+  document.getElementById('btn-connect').textContent = container.classList.contains('show') ? 'Скрыть' : 'Показать ключи';
+}
+
+function copyKey(type){
+  const el = document.getElementById(type === 'social' ? 'key-social' : 'key-gaming');
+  navigator.clipboard.writeText(el.textContent).then(()=>{
+    showToast('Скопировано');
+    if(tg) tg.HapticFeedback?.notificationOccurred('success');
+  });
+}
+
+function go(name){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  document.querySelectorAll('.tab')[name==='home'?0:1].classList.add('on');
+  document.getElementById('main-scroll').scrollTop = 0;
+}
+
+let _tt;
+function showToast(t){
+  const el = document.getElementById('toast');
+  el.textContent = t; el.classList.add('show');
+  clearTimeout(_tt); _tt = setTimeout(()=>el.classList.remove('show'), 2000);
+}
+</script>
+</body>
+</html>
