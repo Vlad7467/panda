@@ -9,114 +9,376 @@
   :root {
     --bg: #09090b;
     --surface: #121215;
-    --surface2: #1a1a1f;
-    --line: rgba(255, 255, 255, 0.08);
-    --accent: #22c55e;
-    --accent-glow: rgba(34, 197, 94, 0.15);
-    --text: #f4f4f5;
-    --text-dim: #a1a1aa;
+    --surface-2: #1a1a1f;
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.16);
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --accent: #f4f4f5;
+    --success: #22c55e;
     --danger: #ff3355;
     --warn: #f59e0b;
-    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --radius: 12px;
+    --radius-lg: 16px;
   }
+  
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; display: flex; justify-content: center; -webkit-font-smoothing: antialiased; }
-  .wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 20px; }
-  .header { display: flex; align-items: center; gap: 14px; }
-  .logo { width: 48px; height: 48px; background: var(--surface2); border-radius: 14px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 24px; }
-  .title { font-size: 22px; font-weight: 700; letter-spacing: -0.6px; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); }
-  .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; }
-  .status-title { font-size: 15px; font-weight: 600; }
-  .status-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; transition: all 0.3s ease; white-space: nowrap; }
-  .status-badge.online { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(34, 197, 94, 0.3); }
-  .status-badge.offline { background: rgba(255, 51, 85, 0.1); color: var(--danger); border: 1px solid rgba(255, 51, 85, 0.3); }
-  .status-badge.loading { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--line); }
-  .status-badge.warn { background: rgba(245, 158, 11, 0.1); color: var(--warn); border: 1px solid rgba(245, 158, 11, 0.3); }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .status-badge.online .dot { animation: pulse 2s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .data-grid { display: flex; gap: 32px; flex-wrap: wrap; }
-  .data-item .val { font-family: var(--mono); font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
-  .data-item .lbl { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .btn { width: 100%; padding: 16px; background: var(--text); color: #000; border: none; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; transition: transform 0.1s, opacity 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .btn:active { transform: scale(0.97); opacity: 0.9; }
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
-  .keys-section { display: none; flex-direction: column; gap: 16px; margin-top: 8px; animation: fadeIn 0.4s ease; }
-  .keys-section.show { display: flex; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-  .key-card { background: var(--surface2); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
-  .key-header { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
-  .key-header .tag { color: var(--text-dim); font-weight: 500; font-size: 12px; text-align: right; }
-  .key-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 14px; }
-  .key-val { font-family: var(--mono); font-size: 10px; color: var(--accent); word-break: break-all; background: #000; padding: 14px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 14px; max-height: 90px; overflow-y: auto; line-height: 1.6; user-select: all; }
-  .copy-btn { background: var(--surface); border: 1px solid var(--line); color: var(--text); padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; width: 100%; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
-  .copy-btn:active { background: var(--line); }
-  .copy-btn.success { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
-  #error { color: var(--danger); font-size: 13px; text-align: center; font-weight: 500; min-height: 18px; margin-top: 10px; }
-  .retry-btn { margin-top: 12px; background: transparent; border: 1px solid var(--line); color: var(--text); padding: 10px; border-radius: 10px; width: 100%; cursor: pointer; font-size: 13px; font-weight: 600; }
-  .retry-btn:active { background: var(--surface2); }
+  
+  body {
+    font-family: var(--font-main);
+    background-color: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  .app-container {
+    width: 100%;
+    max-width: 440px;
+    padding: 24px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* --- Шапка (как на скриншоте) --- */
+  .header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding-bottom: 8px;
+  }
+  .logo-icon {
+    width: 48px; 
+    height: 48px;
+    background: var(--surface-2);
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 24px;
+  }
+  .brand-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+  }
+
+  /* --- Карточка статуса --- */
+  .glass-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    transition: border-color 0.2s ease;
+  }
+  .glass-card:hover {
+    border-color: var(--border-hover);
+  }
+
+  .status-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .status-title {
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .status-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .status-pill.online { color: var(--success); border-color: rgba(34, 197, 94, 0.3); background: rgba(34, 197, 94, 0.1); }
+  .status-pill.offline { color: var(--danger); border-color: rgba(255, 51, 85, 0.3); background: rgba(255, 51, 85, 0.1); }
+  .status-pill.loading { color: var(--text-secondary); }
+  .status-pill.error { color: var(--warn); border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.1); }
+  
+  .status-pill.online .status-dot {
+    box-shadow: 0 0 8px var(--success);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .metric-value {
+    font-family: var(--font-mono);
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .metric-label {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* --- Главная кнопка --- */
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: var(--text-primary);
+    color: #000;
+    border: none;
+    border-radius: 14px;
+    font-family: var(--font-main);
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .btn-primary:hover { transform: translateY(-1px); opacity: 0.9; }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* --- Сообщение об ошибке --- */
+  .error-msg {
+    color: var(--danger);
+    font-size: 13px;
+    text-align: center;
+    min-height: 16px;
+    font-weight: 500;
+    padding: 0 8px;
+    line-height: 1.4;
+  }
+  .retry-btn {
+    margin-top: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.2s;
+  }
+  .retry-btn:hover { background: var(--surface-2); }
+
+  /* --- Секция с ключами --- */
+  .keys-container {
+    display: none;
+    flex-direction: column;
+    gap: 16px;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .keys-container.show { display: flex; }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .key-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    transition: border-color 0.2s ease;
+  }
+  .key-card:hover {
+    border-color: var(--border-hover);
+  }
+
+  .key-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .key-name {
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .key-badge {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+  }
+  .key-description {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    line-height: 1.45;
+  }
+  
+  .key-data-box {
+    background: #000;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--success);
+    word-break: break-all;
+    line-height: 1.6;
+    max-height: 90px;
+    overflow-y: auto;
+    user-select: all;
+  }
+  .key-data-box::-webkit-scrollbar { width: 4px; }
+  .key-data-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+
+  .btn-copy {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    border-radius: 10px;
+    font-family: var(--font-main);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+  }
+  .btn-copy:hover {
+    background: var(--surface);
+  }
+  .btn-copy:active { transform: scale(0.98); }
+  .btn-copy.success {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: rgba(34, 197, 94, 0.3);
+    color: var(--success);
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="header">
-    <div class="logo">🕶️</div>
-    <div class="title">Мамкин Скамер</div>
+<div class="app-container">
+
+  <header class="header">
+    <div class="logo-icon">🕶️</div>
+    <div class="brand-title">Мамкин Скамер</div>
+  </header>
+
+  <div class="glass-card">
+    <div class="status-header">
+      <span class="status-title">Статус подписки</span>
+      <div id="status-badge" class="status-pill loading">
+        <span class="status-dot"></span> Загрузка
+      </div>
+    </div>
+    
+    <div class="metrics-grid">
+      <div class="metric-item">
+        <span class="metric-value" id="ui-expiry">—</span>
+        <span class="metric-label">Действует до</span>
+      </div>
+      <div class="metric-item">
+        <span class="metric-value" id="ui-traffic">0 MB</span>
+        <span class="metric-label">Скачано</span>
+      </div>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="status-row">
-      <div class="status-title">Статус подписки</div>
-      <div id="status-badge" class="status-badge loading"><span class="dot"></span> ЗАГРУЗКА</div>
+  <button class="btn-primary" id="getKeysBtn">
+    Достать ключи
+  </button>
+  
+  <p class="error-msg" id="error"></p>
+
+  <div class="keys-container" id="keysSection">
+    
+    <!-- Key 1 -->
+    <div class="key-card">
+      <div class="key-header">
+        <span class="key-name">VLESS Reality</span>
+        <span class="key-badge">Соцсети / 4K</span>
+      </div>
+      <div class="key-description">Классический Reality · порт 443 · YouTube, Telegram, обход блокировок</div>
+      <div class="key-data-box" id="key-vless">Инициализация...</div>
+      <button class="btn-copy" data-key="vless">Копировать ключ</button>
     </div>
-    <div class="data-grid">
-      <div class="data-item"><div class="val" id="ui-expiry">—</div><div class="lbl">Действует до</div></div>
-      <div class="data-item"><div class="val" id="ui-traffic">0 MB</div><div class="lbl">Скачано</div></div>
+
+    <!-- Key 2 -->
+    <div class="key-card">
+      <div class="key-header">
+        <span class="key-name">VLESS XHTTP Reality</span>
+        <span class="key-badge">Маскировка / Стабильность</span>
+      </div>
+      <div class="key-description">XHTTP + Reality · порт 8443 · маскируется под HTTPS, лучше проходит DPI</div>
+      <div class="key-data-box" id="key-hy2">Инициализация...</div>
+      <button class="btn-copy" data-key="hy2">Копировать ключ</button>
     </div>
+
+    <!-- Key 3 -->
+    <div class="key-card">
+      <div class="key-header">
+        <span class="key-name">eFootball XUDP</span>
+        <span class="key-badge">Игры / Низкий пинг</span>
+      </div>
+      <div class="key-description">VLESS Reality + XUDP · UDP через TCP · для стабильного P2P в eFootball</div>
+      <div class="key-data-box" id="key-game">Инициализация...</div>
+      <button class="btn-copy" data-key="game">Копировать ключ</button>
+    </div>
+
   </div>
 
-  <button class="btn" id="getKeysBtn">Достать ключи</button>
-  <p id="error"></p>
-
-  <div class="keys-section" id="keysSection">
-    <!-- ПРОФИЛЬ 1 -->
-    <div class="key-card">
-      <div class="key-header"><span>VLESS Reality</span><span class="tag">Соцсети / 4K</span></div>
-      <div class="key-desc">Классический Reality · порт 443 · YouTube, Telegram, обход блокировок</div>
-      <div class="key-val" id="key-vless">Загрузка...</div>
-      <button class="copy-btn" data-key="vless">Копировать ключ</button>
-    </div>
-    <!-- ПРОФИЛЬ 2 -->
-    <div class="key-card">
-      <div class="key-header"><span>VLESS XHTTP Reality</span><span class="tag">Маскировка / Стабильность</span></div>
-      <div class="key-desc">XHTTP + Reality · порт 8443 · маскируется под HTTPS, лучше проходит DPI</div>
-      <div class="key-val" id="key-hy2">Загрузка...</div>
-      <button class="copy-btn" data-key="hy2">Копировать ключ</button>
-    </div>
-    <!-- ПРОФИЛЬ 3 -->
-    <div class="key-card">
-      <div class="key-header"><span>eFootball mKCP</span><span class="tag">Игры / UDP</span></div>
-      <div class="key-desc">Оптимизировано для UDP · порт 2096 · стабильный пинг и минимум задержек</div>
-      <div class="key-val" id="key-game">Загрузка...</div>
-      <button class="copy-btn" data-key="game">Копировать ключ</button>
-    </div>
-  </div>
 </div>
 
 <script>
-  // ВСТАВЬ СЮДА СВОЙ АКТУАЛЬНЫЙ URL (если он изменился)
+  // ============================================================
+  // ⚠️ URL API (Cloudflare Tunnel)
+  // ============================================================
   const API = "https://stops-subtle-vernon-pdf.trycloudflare.com";
-  
-  const tg = window.Telegram?.WebApp;
+  // ============================================================
 
+  const tg = window.Telegram?.WebApp;
   try {
     if (tg) {
       tg.ready(); tg.expand();
       try { tg.setHeaderColor('#09090b'); } catch {}
       try { tg.setBackgroundColor('#09090b'); } catch {}
-      if (tg.BackButton) { try { tg.BackButton.show(); tg.BackButton.onClick(() => tg.close()); } catch {} }
+      if (tg.BackButton) {
+        try {
+          tg.BackButton.show();
+          tg.BackButton.onClick(() => tg.close());
+        } catch {}
+      }
     }
   } catch (e) { console.warn('TG init:', e); }
 
@@ -132,12 +394,17 @@
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
       const sep = path.includes('?') ? '&' : '?';
-      const res = await fetch(`${API}${path}${sep}_t=${Date.now()}`, { signal: ctrl.signal, cache: 'no-store' });
+      const res = await fetch(`${API}${path}${sep}_t=${Date.now()}`, {
+        signal: ctrl.signal, cache: 'no-store'
+      });
       const ct = res.headers.get('content-type') || '';
       const text = await res.text();
-      if (!ct.includes('application/json')) throw new Error(`Сервер вернул не JSON (${res.status})`);
+      if (!ct.includes('application/json')) {
+        throw new Error(`Сервер вернул не JSON (${res.status})`);
+      }
       let data;
-      try { data = JSON.parse(text); } catch { throw new Error('Сервер вернул битый JSON'); }
+      try { data = JSON.parse(text); }
+      catch { throw new Error('Поврежденные данные от сервера'); }
       if (!res.ok) {
         const err = new Error(data?.error || data?.msg || `HTTP ${res.status}`);
         err.data = data;
@@ -145,7 +412,7 @@
       }
       return data;
     } catch (e) {
-      if (e.name === 'AbortError') throw new Error('Сервер не отвечает (таймаут)');
+      if (e.name === 'AbortError') throw new Error('Превышено время ожидания');
       throw e;
     } finally { clearTimeout(timer); }
   }
@@ -159,9 +426,9 @@
     if (mb >= 1) return mb.toFixed(1) + " MB";
     return Math.round(n / 1024) + " KB";
   }
-
+  
   function formatDate(iso) {
-    if (!iso || iso === "forever" || iso === 0) return "∞ Навсегда";
+    if (!iso || iso === "forever" || iso === 0) return "∞";
     try {
       const d = new Date(iso);
       if (isNaN(d.getTime())) return "—";
@@ -170,7 +437,9 @@
   }
 
   function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
   }
 
   let statusLoading = false;
@@ -179,19 +448,31 @@
     statusLoading = true;
     const badge = document.getElementById("status-badge");
     const errEl = document.getElementById("error");
+    
+    if (!tg || !tg.initData) {
+        badge.className = "status-pill error";
+        badge.innerHTML = '<span class="status-dot"></span> Ошибка';
+        errEl.innerHTML = `Ошибка авторизации Telegram.<br><span style="color: var(--text-secondary); font-size: 11px;">Откройте кабинет через бота</span>`;
+        statusLoading = false;
+        return;
+    }
+
     try {
-      const data = await apiFetch(`/api/status?initData=${encodeURIComponent(tg?.initData || '')}`);
+      const data = await apiFetch(`/api/status?initData=${encodeURIComponent(tg.initData)}`);
       if (data.active) {
-        badge.className = "status-badge online"; badge.innerHTML = '<span class="dot"></span> ONLINE';
+        badge.className = "status-pill online";
+        badge.innerHTML = '<span class="status-dot"></span> Активна';
       } else {
-        badge.className = "status-badge offline"; badge.innerHTML = '<span class="dot"></span> OFFLINE';
+        badge.className = "status-pill offline";
+        badge.innerHTML = '<span class="status-dot"></span> Неактивна';
       }
       document.getElementById("ui-expiry").textContent = formatDate(data.expiry);
       document.getElementById("ui-traffic").textContent = formatTraffic((Number(data.traffic_gb) || 0) * 1024 ** 3);
-      errEl.textContent = "";
+      errEl.innerHTML = "";
     } catch (e) {
-      badge.className = "status-badge warn"; badge.innerHTML = '<span class="dot"></span> ОШИБКА';
-      errEl.innerHTML = `${escapeHtml(e.message || 'Сервер не отвечает')}.<br><button class="retry-btn" onclick="loadStatus()">Повторить</button>`;
+      badge.className = "status-pill error";
+      badge.innerHTML = '<span class="status-dot"></span> Ошибка';
+      errEl.innerHTML = `${escapeHtml(e.message || 'Сервер недоступен')}<br><button class="retry-btn" onclick="loadStatus()">Повторить</button>`;
     } finally { statusLoading = false; }
   }
 
@@ -203,48 +484,88 @@
 
   btn.onclick = async () => {
     if (keysLoading) return;
-    if (section.classList.contains("show")) { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-    keysLoading = true; errEl.textContent = ""; btn.disabled = true; btn.textContent = "Загрузка..."; haptic('impact', 'light');
+    if (section.classList.contains("show")) { 
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+      return; 
+    }
+    
+    if (!tg || !tg.initData) {
+        errEl.innerHTML = `Откройте приложение через Telegram для получения ключей.`;
+        return;
+    }
+
+    keysLoading = true; 
+    errEl.innerHTML = ""; 
+    btn.disabled = true; 
+    btn.textContent = "Загрузка..."; 
+    haptic('impact', 'light');
+
     try {
-      const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg?.initData || '')}`);
-      
+      const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg.initData)}`);
       const vless = data.vless || "";
       const xhttp = data.hy2 || data.xhttp || "";
-      const game = data.game || "";
+      const game  = data.game || "";
 
-      document.getElementById("key-vless").textContent = vless || "⚠️ ключ не получен";
-      document.getElementById("key-hy2").textContent  = xhttp || "⚠️ ключ не получен";
-      document.getElementById("key-game").textContent = game || "⚠️ ключ не получен (mKCP не настроен)";
+      document.getElementById("key-vless").textContent = vless || "Ошибка получения данных";
+      document.getElementById("key-hy2").textContent   = xhttp || "Ошибка получения данных";
+      document.getElementById("key-game").textContent  = game  || "Ошибка получения данных (XUDP)";
 
       if (!vless && !xhttp && !game) {
-        errEl.textContent = "Сервер вернул пустые ключи. Обратись в поддержку.";
-        btn.disabled = false; btn.textContent = "Достать ключи"; return;
+        errEl.textContent = "Сервер вернул пустые ключи.";
+        btn.disabled = false; 
+        btn.textContent = "Достать ключи"; 
+        return;
       }
-      section.classList.add("show"); keysLoaded = true; btn.textContent = "Ключи ниже 👇"; btn.disabled = false;
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' }); haptic('notify', 'success');
+
+      section.classList.add("show"); 
+      keysLoaded = true;
+      btn.textContent = "Ключи ниже 👇"; 
+      btn.disabled = false;
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+      haptic('notify', 'success');
     } catch (e) {
-      errEl.textContent = e.message || "Ошибка сервера. Попробуй позже.";
-      btn.disabled = false; btn.textContent = keysLoaded ? "Ключи ниже 👇" : "Достать ключи"; haptic('notify', 'error');
+      errEl.textContent = e.message || "Внутренняя ошибка.";
+      btn.disabled = false;
+      btn.textContent = keysLoaded ? "Ключи ниже 👇" : "Достать ключи";
+      haptic('notify', 'error');
     } finally { keysLoading = false; }
   };
 
-  document.querySelectorAll(".copy-btn").forEach(b => {
+  document.querySelectorAll(".btn-copy").forEach(b => {
     b.onclick = async () => {
       const el = document.getElementById("key-" + b.dataset.key);
       const text = el.textContent || "";
-      if (!text || text.startsWith("Ошибка") || text.startsWith("⚠️") || text === "Загрузка...") return;
+      if (!text || text.includes("Ошибка") || text === "Инициализация...") return;
+      
       let ok = false;
-      try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch {}
+      try { 
+        if (navigator.clipboard && window.isSecureContext) { 
+          await navigator.clipboard.writeText(text); 
+          ok = true; 
+        } 
+      } catch {}
+      
       if (!ok) {
         try {
-          const ta = document.createElement("textarea"); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-          document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta);
+          const ta = document.createElement("textarea"); 
+          ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select(); 
+          ok = document.execCommand('copy'); 
+          document.body.removeChild(ta);
         } catch { ok = false; }
       }
+      
       if (ok) {
-        haptic('notify', 'success'); b.textContent = "✓ Скопировано"; b.classList.add("success");
-        setTimeout(() => { b.textContent = "Копировать ключ"; b.classList.remove("success"); }, 2000);
-      } else { errEl.textContent = "Не удалось скопировать — выдели текст вручную."; }
+        haptic('notify', 'success'); 
+        b.textContent = "✓ Скопировано"; 
+        b.classList.add("success");
+        setTimeout(() => { 
+          b.textContent = "Копировать ключ"; 
+          b.classList.remove("success"); 
+        }, 2000);
+      } else { 
+        errEl.textContent = "Не удалось скопировать."; 
+      }
     };
   });
 
