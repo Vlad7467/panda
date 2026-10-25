@@ -21,46 +21,15 @@
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body {
-    font-family: var(--sans);
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    -webkit-font-smoothing: antialiased;
-  }
+  body { font-family: var(--sans); background: var(--bg); color: var(--text); min-height: 100vh; padding: 20px; display: flex; justify-content: center; -webkit-font-smoothing: antialiased; }
   .wrap { width: 100%; max-width: 420px; display: flex; flex-direction: column; gap: 20px; }
   .header { display: flex; align-items: center; gap: 14px; }
-  .logo {
-    width: 48px; height: 48px;
-    background: var(--surface2);
-    border-radius: 14px;
-    border: 1px solid var(--line);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-  }
+  .logo { width: 48px; height: 48px; background: var(--surface2); border-radius: 14px; border: 1px solid var(--line); display: flex; align-items: center; justify-content: center; font-size: 24px; }
   .title { font-size: 22px; font-weight: 700; letter-spacing: -0.6px; }
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-  }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); }
   .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; gap: 12px; }
   .status-title { font-size: 15px; font-weight: 600; }
-  .status-badge {
-    font-family: var(--mono);
-    font-size: 11px; font-weight: 700;
-    padding: 6px 12px;
-    border-radius: 20px;
-    display: flex; align-items: center; gap: 8px;
-    text-transform: uppercase;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-  }
+  .status-badge { font-family: var(--mono); font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; transition: all 0.3s ease; white-space: nowrap; }
   .status-badge.online { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(34, 197, 94, 0.3); }
   .status-badge.offline { background: rgba(255, 51, 85, 0.1); color: var(--danger); border: 1px solid rgba(255, 51, 85, 0.3); }
   .status-badge.loading { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--line); }
@@ -71,21 +40,7 @@
   .data-grid { display: flex; gap: 32px; flex-wrap: wrap; }
   .data-item .val { font-family: var(--mono); font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
   .data-item .lbl { font-size: 11px; color: var(--text-dim); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .btn {
-    width: 100%;
-    padding: 16px;
-    background: var(--text);
-    color: #000;
-    border: none;
-    border-radius: 14px;
-    font-size: 15px;
-    font-weight: 800;
-    cursor: pointer;
-    transition: transform 0.1s, opacity 0.2s;
-    display: flex; justify-content: center; align-items: center; gap: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
+  .btn { width: 100%; padding: 16px; background: var(--text); color: #000; border: none; border-radius: 14px; font-size: 15px; font-weight: 800; cursor: pointer; transition: transform 0.1s, opacity 0.2s; display: flex; justify-content: center; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
   .btn:active { transform: scale(0.97); opacity: 0.9; }
   .btn:disabled { opacity: 0.5; cursor: not-allowed; }
   .keys-section { display: none; flex-direction: column; gap: 16px; margin-top: 8px; animation: fadeIn 0.4s ease; }
@@ -95,49 +50,12 @@
   .key-header { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 6px; font-size: 14px; font-weight: 700; }
   .key-header .tag { color: var(--text-dim); font-weight: 500; font-size: 12px; text-align: right; }
   .key-desc { font-size: 12px; color: var(--text-dim); margin-bottom: 14px; }
-  .key-val {
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--accent);
-    word-break: break-all;
-    background: #000;
-    padding: 14px;
-    border-radius: 10px;
-    border: 1px solid var(--line);
-    margin-bottom: 14px;
-    max-height: 90px;
-    overflow-y: auto;
-    line-height: 1.6;
-    user-select: all;
-  }
-  .copy-btn {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    color: var(--text);
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 13px;
-    font-weight: 600;
-    width: 100%;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-transform: uppercase;
-  }
+  .key-val { font-family: var(--mono); font-size: 10px; color: var(--accent); word-break: break-all; background: #000; padding: 14px; border-radius: 10px; border: 1px solid var(--line); margin-bottom: 14px; max-height: 90px; overflow-y: auto; line-height: 1.6; user-select: all; }
+  .copy-btn { background: var(--surface); border: 1px solid var(--line); color: var(--text); padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; width: 100%; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
   .copy-btn:active { background: var(--line); }
   .copy-btn.success { background: var(--accent-glow); border-color: var(--accent); color: var(--accent); }
   #error { color: var(--danger); font-size: 13px; text-align: center; font-weight: 500; min-height: 18px; margin-top: 10px; }
-  .retry-btn {
-    margin-top: 12px;
-    background: transparent;
-    border: 1px solid var(--line);
-    color: var(--text);
-    padding: 10px;
-    border-radius: 10px;
-    width: 100%;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-  }
+  .retry-btn { margin-top: 12px; background: transparent; border: 1px solid var(--line); color: var(--text); padding: 10px; border-radius: 10px; width: 100%; cursor: pointer; font-size: 13px; font-weight: 600; }
   .retry-btn:active { background: var(--surface2); }
 </style>
 </head>
@@ -163,46 +81,42 @@
   <p id="error"></p>
 
   <div class="keys-section" id="keysSection">
+    <!-- ПРОФИЛЬ 1 -->
     <div class="key-card">
-      <div class="key-header">
-        <span>VLESS Reality</span>
-        <span class="tag">Соцсети / 4K</span>
-      </div>
+      <div class="key-header"><span>VLESS Reality</span><span class="tag">Соцсети / 4K</span></div>
       <div class="key-desc">Классический Reality · порт 443 · YouTube, Telegram, обход блокировок</div>
       <div class="key-val" id="key-vless">Загрузка...</div>
       <button class="copy-btn" data-key="vless">Копировать ключ</button>
     </div>
+    <!-- ПРОФИЛЬ 2 -->
     <div class="key-card">
-      <div class="key-header">
-        <span>VLESS XHTTP Reality</span>
-        <span class="tag">Маскировка / Стабильность</span>
-      </div>
+      <div class="key-header"><span>VLESS XHTTP Reality</span><span class="tag">Маскировка / Стабильность</span></div>
       <div class="key-desc">XHTTP + Reality · порт 8443 · маскируется под HTTPS, лучше проходит DPI</div>
       <div class="key-val" id="key-hy2">Загрузка...</div>
       <button class="copy-btn" data-key="hy2">Копировать ключ</button>
+    </div>
+    <!-- ПРОФИЛЬ 3 -->
+    <div class="key-card">
+      <div class="key-header"><span>eFootball mKCP</span><span class="tag">Игры / UDP</span></div>
+      <div class="key-desc">Оптимизировано для UDP · порт 2096 · стабильный пинг и минимум задержек</div>
+      <div class="key-val" id="key-game">Загрузка...</div>
+      <button class="copy-btn" data-key="game">Копировать ключ</button>
     </div>
   </div>
 </div>
 
 <script>
-  // ==============================================================
+  // ВСТАВЬ СЮДА СВОЙ АКТУАЛЬНЫЙ URL (если он изменился)
   const API = "https://stops-subtle-vernon-pdf.trycloudflare.com";
-  // ==============================================================
-
+  
   const tg = window.Telegram?.WebApp;
 
   try {
     if (tg) {
-      tg.ready();
-      tg.expand();
+      tg.ready(); tg.expand();
       try { tg.setHeaderColor('#09090b'); } catch {}
       try { tg.setBackgroundColor('#09090b'); } catch {}
-      if (tg.BackButton) {
-        try {
-          tg.BackButton.show();
-          tg.BackButton.onClick(() => tg.close());
-        } catch {}
-      }
+      if (tg.BackButton) { try { tg.BackButton.show(); tg.BackButton.onClick(() => tg.close()); } catch {} }
     }
   } catch (e) { console.warn('TG init:', e); }
 
@@ -218,17 +132,12 @@
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     try {
       const sep = path.includes('?') ? '&' : '?';
-      const res = await fetch(`${API}${path}${sep}_t=${Date.now()}`, {
-        signal: ctrl.signal, cache: 'no-store'
-      });
+      const res = await fetch(`${API}${path}${sep}_t=${Date.now()}`, { signal: ctrl.signal, cache: 'no-store' });
       const ct = res.headers.get('content-type') || '';
       const text = await res.text();
-      if (!ct.includes('application/json')) {
-        throw new Error(`Сервер вернул не JSON (${res.status})`);
-      }
+      if (!ct.includes('application/json')) throw new Error(`Сервер вернул не JSON (${res.status})`);
       let data;
-      try { data = JSON.parse(text); }
-      catch { throw new Error('Сервер вернул битый JSON'); }
+      try { data = JSON.parse(text); } catch { throw new Error('Сервер вернул битый JSON'); }
       if (!res.ok) {
         const err = new Error(data?.error || data?.msg || `HTTP ${res.status}`);
         err.data = data;
@@ -238,9 +147,7 @@
     } catch (e) {
       if (e.name === 'AbortError') throw new Error('Сервер не отвечает (таймаут)');
       throw e;
-    } finally {
-      clearTimeout(timer);
-    }
+    } finally { clearTimeout(timer); }
   }
 
   function formatTraffic(bytes) {
@@ -263,9 +170,7 @@
   }
 
   function escapeHtml(s) {
-    return String(s).replace(/[&<>"']/g, c => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
-    }[c]));
+    return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   }
 
   let statusLoading = false;
@@ -277,22 +182,17 @@
     try {
       const data = await apiFetch(`/api/status?initData=${encodeURIComponent(tg?.initData || '')}`);
       if (data.active) {
-        badge.className = "status-badge online";
-        badge.innerHTML = '<span class="dot"></span> ONLINE';
+        badge.className = "status-badge online"; badge.innerHTML = '<span class="dot"></span> ONLINE';
       } else {
-        badge.className = "status-badge offline";
-        badge.innerHTML = '<span class="dot"></span> OFFLINE';
+        badge.className = "status-badge offline"; badge.innerHTML = '<span class="dot"></span> OFFLINE';
       }
       document.getElementById("ui-expiry").textContent = formatDate(data.expiry);
       document.getElementById("ui-traffic").textContent = formatTraffic((Number(data.traffic_gb) || 0) * 1024 ** 3);
       errEl.textContent = "";
     } catch (e) {
-      badge.className = "status-badge warn";
-      badge.innerHTML = '<span class="dot"></span> ОШИБКА';
+      badge.className = "status-badge warn"; badge.innerHTML = '<span class="dot"></span> ОШИБКА';
       errEl.innerHTML = `${escapeHtml(e.message || 'Сервер не отвечает')}.<br><button class="retry-btn" onclick="loadStatus()">Повторить</button>`;
-    } finally {
-      statusLoading = false;
-    }
+    } finally { statusLoading = false; }
   }
 
   const btn = document.getElementById("getKeysBtn");
@@ -303,48 +203,29 @@
 
   btn.onclick = async () => {
     if (keysLoading) return;
-
-    if (section.classList.contains("show")) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      return;
-    }
-
-    keysLoading = true;
-    errEl.textContent = "";
-    btn.disabled = true;
-    btn.textContent = "Загрузка...";
-    haptic('impact', 'light');
-
+    if (section.classList.contains("show")) { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    keysLoading = true; errEl.textContent = ""; btn.disabled = true; btn.textContent = "Загрузка..."; haptic('impact', 'light');
     try {
       const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg?.initData || '')}`);
-
-      const vless = data.vless || data.vless_link || "";
-      const xhttp = data.hy2 || data.xhttp || data.xhttp_link || "";
+      
+      const vless = data.vless || "";
+      const xhttp = data.hy2 || data.xhttp || "";
+      const game = data.game || "";
 
       document.getElementById("key-vless").textContent = vless || "⚠️ ключ не получен";
       document.getElementById("key-hy2").textContent  = xhttp || "⚠️ ключ не получен";
+      document.getElementById("key-game").textContent = game || "⚠️ ключ не получен (mKCP не настроен)";
 
-      if (!vless && !xhttp) {
+      if (!vless && !xhttp && !game) {
         errEl.textContent = "Сервер вернул пустые ключи. Обратись в поддержку.";
-        btn.disabled = false;
-        btn.textContent = "Достать ключи";
-        return;
+        btn.disabled = false; btn.textContent = "Достать ключи"; return;
       }
-
-      section.classList.add("show");
-      keysLoaded = true;
-      btn.textContent = "Ключи ниже 👇";
-      btn.disabled = false;
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      haptic('notify', 'success');
+      section.classList.add("show"); keysLoaded = true; btn.textContent = "Ключи ниже 👇"; btn.disabled = false;
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' }); haptic('notify', 'success');
     } catch (e) {
       errEl.textContent = e.message || "Ошибка сервера. Попробуй позже.";
-      btn.disabled = false;
-      btn.textContent = keysLoaded ? "Ключи ниже 👇" : "Достать ключи";
-      haptic('notify', 'error');
-    } finally {
-      keysLoading = false;
-    }
+      btn.disabled = false; btn.textContent = keysLoaded ? "Ключи ниже 👇" : "Достать ключи"; haptic('notify', 'error');
+    } finally { keysLoading = false; }
   };
 
   document.querySelectorAll(".copy-btn").forEach(b => {
@@ -352,39 +233,18 @@
       const el = document.getElementById("key-" + b.dataset.key);
       const text = el.textContent || "";
       if (!text || text.startsWith("Ошибка") || text.startsWith("⚠️") || text === "Загрузка...") return;
-
       let ok = false;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-          ok = true;
-        }
-      } catch {}
-
+      try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch {}
       if (!ok) {
         try {
-          const ta = document.createElement("textarea");
-          ta.value = text;
-          ta.style.position = 'fixed';
-          ta.style.opacity = '0';
-          document.body.appendChild(ta);
-          ta.select();
-          ok = document.execCommand('copy');
-          document.body.removeChild(ta);
+          const ta = document.createElement("textarea"); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+          document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta);
         } catch { ok = false; }
       }
-
       if (ok) {
-        haptic('notify', 'success');
-        b.textContent = "✓ Скопировано";
-        b.classList.add("success");
-        setTimeout(() => {
-          b.textContent = "Копировать ключ";
-          b.classList.remove("success");
-        }, 2000);
-      } else {
-        errEl.textContent = "Не удалось скопировать — выдели текст вручную.";
-      }
+        haptic('notify', 'success'); b.textContent = "✓ Скопировано"; b.classList.add("success");
+        setTimeout(() => { b.textContent = "Копировать ключ"; b.classList.remove("success"); }, 2000);
+      } else { errEl.textContent = "Не удалось скопировать — выдели текст вручную."; }
     };
   });
 
