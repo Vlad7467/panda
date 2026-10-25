@@ -58,18 +58,46 @@
   .key-data-box::-webkit-scrollbar { width: 4px; }
   .key-data-box::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
 
-  .key-actions { display: grid; grid-template-columns: 1fr 2fr; gap: 8px; }
-  .btn-copy { width: 100%; padding: 14px; background: transparent; border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; font-family: var(--font-main); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-transform: uppercase; }
-  .btn-copy:hover { background: var(--surface); }
-  .btn-copy:active { transform: scale(0.98); }
-  .btn-copy.success { background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
-
-  .btn-launch { width: 100%; padding: 14px; background: var(--success); color: #000; border: none; border-radius: 10px; font-family: var(--font-main); font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.2s; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .btn-launch:active { transform: scale(0.98); }
-  .btn-launch:hover { opacity: 0.9; }
+  /* Обновленные кнопки действий */
+  .key-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  
+  .btn-action { 
+    width: 100%; 
+    padding: 12px; 
+    background: transparent; 
+    border: 1px solid var(--border); 
+    color: var(--text-primary); 
+    border-radius: 10px; 
+    font-family: var(--font-main); 
+    font-size: 12px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.2s; 
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-action:hover { background: var(--surface); border-color: var(--border-hover); }
+  .btn-action:active { transform: scale(0.98); }
+  
+  .btn-action.success { background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: var(--success); }
+  
+  /* Специфичный стиль для кнопки INCY, чтобы чуть выделялась, но не была кислотной */
+  .btn-action.launch {
+    border-color: rgba(255, 255, 255, 0.2); /* Чуть ярче рамка */
+    font-weight: 700;
+  }
+  .btn-action.launch:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
 
   .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface-2); border: 1px solid var(--border-hover); color: var(--text-primary); padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 999; pointer-events: none; max-width: 90%; text-align: center; }
   .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  #incy-anchor { display: none; }
 </style>
 </head>
 <body>
@@ -99,8 +127,8 @@
       <div class="key-description">Классический профиль для повседневного использования, высокой скорости и стриминга.</div>
       <div class="key-data-box" id="key-vless">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-copy" data-key="vless">Копировать</button>
-        <button class="btn-launch" data-key="vless">🚀 Открыть в INCY</button>
+        <button class="btn-action" data-key="vless" id="copy-vless">Копировать</button>
+        <button class="btn-action launch" data-key="vless" id="launch-vless">В INCY</button>
       </div>
     </div>
 
@@ -109,12 +137,13 @@
       <div class="key-description">Улучшенная маскировка под HTTPS. Для сложных сетей и обхода DPI.</div>
       <div class="key-data-box" id="key-hy2">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-copy" data-key="hy2">Копировать</button>
-        <button class="btn-launch" data-key="hy2">🚀 Открыть в INCY</button>
+        <button class="btn-action" data-key="hy2" id="copy-hy2">Копировать</button>
+        <button class="btn-action launch" data-key="hy2" id="launch-hy2">В INCY</button>
       </div>
     </div>
   </div>
 
+  <a id="incy-anchor" href="#">Открыть INCY</a>
   <div class="toast" id="toast"></div>
 </div>
 
@@ -197,53 +226,38 @@
   };
 
   // Копирование
-  document.querySelectorAll(".btn-copy").forEach(b => {
+  document.querySelectorAll(".btn-action:not(.launch)").forEach(b => {
     b.onclick = async () => {
       const el = document.getElementById("key-" + b.dataset.key); const text = el.textContent || "";
       if (!text || text.includes("Ошибка") || text === "Инициализация...") return;
       let ok = false;
       try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch {}
       if (!ok) { try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta); } catch { ok = false; } }
-      if (ok) { haptic('notify'); b.textContent = "✓"; b.classList.add("success"); setTimeout(() => { b.textContent = "Копировать"; b.classList.remove("success"); }, 2000); }
+      if (ok) { haptic('notify'); const originalText = b.textContent; b.textContent = "✓"; b.classList.add("success"); setTimeout(() => { b.textContent = originalText; b.classList.remove("success"); }, 2000); }
     };
   });
 
-  // Умное открытие INCY с fallback в Play Store
+  // Открытие INCY
   function openIncy(keyText) {
     const isAndroid = /android/i.test(navigator.userAgent);
-    const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-    
     if (!isAndroid) {
-      // Не Android — копируем и говорим что делать
       navigator.clipboard?.writeText(keyText).catch(() => {});
-      showToast(isIOS ? "Ключ скопирован. Открой Streisand и вставь." : "Ключ скопирован. Открой свой клиент и вставь.");
+      showToast("Ключ скопирован. Открой свой клиент и вставь.");
       return;
     }
     
-    // Android — пробуем открыть INCY
     const deepLink = `incy://add/${encodeURIComponent(keyText)}`;
+    const anchor = document.getElementById("incy-anchor");
+    anchor.href = deepLink;
+    anchor.click();
+    
     let appOpened = false;
-    
-    // Если окно теряет фокус или уходит в фон — приложение открылось
     const onBlur = () => { appOpened = true; };
-    const onVisibility = () => { if (document.hidden) appOpened = true; };
-    
     window.addEventListener('blur', onBlur, { once: true });
-    document.addEventListener('visibilitychange', onVisibility, { once: true });
     
-    // Пытаемся открыть приложение
-    try {
-      window.location.href = deepLink;
-    } catch (e) {
-      // Ничего
-    }
-    
-    // Через 1.5 секунды — если приложение не открылось, идём в Play Store
     setTimeout(() => {
       window.removeEventListener('blur', onBlur);
-      document.removeEventListener('visibilitychange', onVisibility);
-      
-      if (!appOpened && !document.hidden) {
+      if (!appOpened && document.visibilityState === 'visible') {
         showToast("INCY не установлен. Открываем Google Play...");
         setTimeout(() => {
           window.location.href = PLAY_STORE_URL;
@@ -252,9 +266,9 @@
     }, 1500);
   }
 
-  document.querySelectorAll(".btn-launch").forEach(b => {
+  document.querySelectorAll(".btn-action.launch").forEach(b => {
     b.onclick = () => {
-      const el = document.getElementById("key-" + b.dataset.key); 
+      const el = document.getElementById("key-" + b.dataset.key);
       const text = el.textContent || "";
       if (!text || text.includes("Ошибка") || text === "Инициализация...") {
         showToast("Сначала получи ключи.");
