@@ -10,13 +10,14 @@
     --bg: #09090b; --surface: #121215; --surface-2: #1a1a1f;
     --border: rgba(255, 255, 255, 0.08); --border-hover: rgba(255, 255, 255, 0.16);
     --text-primary: #f4f4f5; --text-secondary: #a1a1aa;
-    --success: #22c55e; --danger: #ff3355; --warn: #f59e0b;
+    --success: #22c55e; --danger: #ff3355; --warn: #f59e0b; --accent: #00d4ff;
     --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
     --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   body { font-family: var(--font-main); background-color: var(--bg); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; -webkit-font-smoothing: antialiased; }
   .app-container { width: 100%; max-width: 440px; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }
+
   .header { display: flex; align-items: center; gap: 14px; padding-bottom: 8px; }
   .logo-icon { width: 48px; height: 48px; background: var(--surface-2); border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 24px; }
   .brand-title { font-size: 22px; font-weight: 700; letter-spacing: -0.6px; }
@@ -32,6 +33,7 @@
   .status-pill.error { color: var(--warn); border-color: rgba(245, 158, 11, 0.3); background: rgba(245, 158, 11, 0.1); }
   .status-pill.online .status-dot { box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
   @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
   .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .metric-item { display: flex; flex-direction: column; gap: 6px; }
   .metric-value { font-family: var(--font-mono); font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
@@ -49,10 +51,18 @@
   .keys-container.show { display: flex; }
   @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 
-  .key-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; }
-  .key-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .key-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; position: relative; overflow: hidden; }
+  .key-card.primary { border-color: rgba(0, 212, 255, 0.3); }
+  .key-card.primary::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
+  .key-card.game { border-color: rgba(34, 197, 94, 0.3); }
+  .key-card.game::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--success), transparent); }
+
+  .key-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
   .key-name { font-size: 14px; font-weight: 700; }
-  .key-badge { font-size: 12px; font-weight: 500; color: var(--text-secondary); }
+  .key-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+  .key-badge.primary { background: rgba(0, 212, 255, 0.15); color: var(--accent); }
+  .key-badge.fallback { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); }
+  .key-badge.game { background: rgba(34, 197, 94, 0.15); color: var(--success); }
   .key-description { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.45; }
   .key-data-box { background: #000; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--success); word-break: break-all; line-height: 1.6; max-height: 90px; overflow-y: auto; user-select: all; }
   .key-data-box::-webkit-scrollbar { width: 4px; }
@@ -92,9 +102,27 @@
   <p class="error-msg" id="error"></p>
 
   <div class="keys-container" id="keysSection">
+    <!-- Основной -->
+    <div class="key-card primary">
+      <div class="key-header">
+        <span class="key-name">🇩🇪 DE Основной</span>
+        <span class="key-badge primary">⭐ XHTTP</span>
+      </div>
+      <div class="key-description">Лучший профиль для повседневного использования. Максимальная скорость и стабильность.</div>
+      <div class="key-data-box" id="key-hy2">Инициализация...</div>
+      <div class="key-actions">
+        <button class="btn-action" data-key="hy2">Копировать</button>
+        <button class="btn-action launch" data-key="hy2">В INCY</button>
+      </div>
+    </div>
+
+    <!-- Резервный -->
     <div class="key-card">
-      <div class="key-header"><span class="key-name">VLESS Reality</span><span class="key-badge">Соцсети / 4K</span></div>
-      <div class="key-description">Классический профиль для повседневного использования, высокой скорости и стриминга.</div>
+      <div class="key-header">
+        <span class="key-name">🇩🇪 DE Резервный</span>
+        <span class="key-badge fallback">🛡️ TCP · iOS</span>
+      </div>
+      <div class="key-description">Запасной профиль для iPhone/iPad или если основной не работает.</div>
       <div class="key-data-box" id="key-vless">Инициализация...</div>
       <div class="key-actions">
         <button class="btn-action" data-key="vless">Копировать</button>
@@ -102,13 +130,17 @@
       </div>
     </div>
 
-    <div class="key-card">
-      <div class="key-header"><span class="key-name">VLESS XHTTP Reality</span><span class="key-badge">Маскировка / DPI</span></div>
-      <div class="key-description">Улучшенная маскировка под HTTPS. Для сложных сетей и обхода DPI.</div>
-      <div class="key-data-box" id="key-hy2">Инициализация...</div>
+    <!-- Игровой -->
+    <div class="key-card game">
+      <div class="key-header">
+        <span class="key-name">🇩🇪 DE Игровой</span>
+        <span class="key-badge game">🎮 eFootball</span>
+      </div>
+      <div class="key-description">Специальный профиль для eFootball. Стабильный пинг и низкая задержка в матчах.</div>
+      <div class="key-data-box" id="key-game">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-action" data-key="hy2">Копировать</button>
-        <button class="btn-action launch" data-key="hy2">В INCY</button>
+        <button class="btn-action" data-key="game">Копировать</button>
+        <button class="btn-action launch" data-key="game">В INCY</button>
       </div>
     </div>
   </div>
@@ -117,7 +149,7 @@
 </div>
 
 <script>
-  const API = "https://stops-subtle-vernon-pdf.trycloudflare.com"; // ЗАМЕНИ, ЕСЛИ URL ИЗМЕНИЛСЯ
+  const API = "https://stops-subtle-vernon-pdf.trycloudflare.com";
   const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=llc.itdev.incy";
   const tg = window.Telegram?.WebApp;
   try { if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#09090b'); tg.setBackgroundColor('#09090b'); } } catch (e) {}
@@ -183,11 +215,18 @@
     keysLoading = true; errEl.innerHTML = ""; btn.disabled = true; btn.textContent = "Загрузка..."; haptic('impact');
     try {
       const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg.initData)}`);
-      const vless = data.vless || ""; const xhttp = data.hy2 || data.xhttp || "";
+      const vless = data.vless || "";
+      const xhttp = data.hy2 || data.xhttp || "";
+      const game = data.game || "";
       document.getElementById("key-vless").textContent = vless || "Ошибка получения данных";
       document.getElementById("key-hy2").textContent   = xhttp || "Ошибка получения данных";
-      if (!vless && !xhttp) { errEl.textContent = "Сервер вернул пустые ключи."; btn.disabled = false; btn.textContent = "Достать ключи"; return; }
-      section.classList.add("show"); btn.textContent = "Ключи ниже 👇"; btn.disabled = false;
+      document.getElementById("key-game").textContent  = game || "Ошибка получения данных";
+      if (!vless && !xhttp && !game) {
+        errEl.textContent = "Сервер вернул пустые ключи.";
+        btn.disabled = false; btn.textContent = "Достать ключи"; return;
+      }
+      section.classList.add("show");
+      btn.textContent = "Ключи ниже 👇"; btn.disabled = false;
       section.scrollIntoView({ behavior: 'smooth' }); haptic('notify');
     } catch (e) {
       errEl.textContent = e.message; btn.disabled = false; btn.textContent = "Достать ключи";
@@ -197,58 +236,51 @@
   // Копирование
   document.querySelectorAll(".btn-action:not(.launch)").forEach(b => {
     b.onclick = async () => {
-      const el = document.getElementById("key-" + b.dataset.key); const text = el.textContent || "";
+      const el = document.getElementById("key-" + b.dataset.key);
+      const text = el.textContent || "";
       if (!text || text.includes("Ошибка") || text === "Инициализация...") return;
       let ok = false;
       try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch {}
-      if (!ok) { try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta); } catch { ok = false; } }
-      if (ok) { haptic('notify'); const originalText = b.textContent; b.textContent = "✓"; b.classList.add("success"); setTimeout(() => { b.textContent = originalText; b.classList.remove("success"); }, 2000); }
+      if (!ok) {
+        try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta); } catch { ok = false; }
+      }
+      if (ok) {
+        haptic('notify');
+        const orig = b.textContent;
+        b.textContent = "✓";
+        b.classList.add("success");
+        setTimeout(() => { b.textContent = orig; b.classList.remove("success"); }, 2000);
+      }
     };
   });
 
-  // Умное открытие INCY через Telegram WebApp API
+  // Открытие INCY с fallback в Play Store
   function openIncy(keyText) {
     const isAndroid = /android/i.test(navigator.userAgent);
     if (!isAndroid) {
       navigator.clipboard?.writeText(keyText).catch(() => {});
-      showToast("Ключ скопирован. Открой свой клиент и вставь.");
+      showToast("Ключ скопирован. Открой клиент и вставь.");
       return;
     }
-    
     const deepLink = `incy://add/${encodeURIComponent(keyText)}`;
     let appOpened = false;
-    
-    // Отслеживаем, ушло ли приложение в фон
     const onBlur = () => { appOpened = true; };
     window.addEventListener('blur', onBlur, { once: true });
-    
+
     try {
-      // 1. Пробуем через официальный метод Telegram
-      if (tg && typeof tg.openLink === 'function') {
-        tg.openLink(deepLink);
-      } 
-      // 2. Пробуем через window.open с _blank (по совету из Stack Overflow)
-      else {
-        window.open(deepLink, '_blank');
-      }
+      if (tg && typeof tg.openLink === 'function') tg.openLink(deepLink);
+      else window.location.href = deepLink;
     } catch (e) {
-      // Если что-то пошло не так, пробуем сменить location
       window.location.href = deepLink;
     }
-    
-    // Через 1.5 секунды проверяем, открылось ли приложение
+
     setTimeout(() => {
       window.removeEventListener('blur', onBlur);
-      // Если страница всё ещё видима и не потеряла фокус — приложение не открылось
       if (!appOpened && document.visibilityState === 'visible') {
         showToast("INCY не установлен. Открываем Google Play...");
         setTimeout(() => {
-          // Открываем Play Store через Telegram API или напрямую
-          if (tg && typeof tg.openLink === 'function') {
-            tg.openLink(PLAY_STORE_URL);
-          } else {
-            window.location.href = PLAY_STORE_URL;
-          }
+          if (tg && typeof tg.openLink === 'function') tg.openLink(PLAY_STORE_URL);
+          else window.location.href = PLAY_STORE_URL;
         }, 800);
       }
     }, 1500);
@@ -259,15 +291,15 @@
       const el = document.getElementById("key-" + b.dataset.key);
       const text = el.textContent || "";
       if (!text || text.includes("Ошибка") || text === "Инициализация...") {
-        showToast("Сначала получи ключи.");
-        return;
+        showToast("Сначала получи ключи."); return;
       }
       haptic('impact');
       openIncy(text);
     };
   });
 
-  loadStatus(); setInterval(loadStatus, 30000);
+  loadStatus();
+  setInterval(loadStatus, 30000);
 </script>
 </body>
 </html>
