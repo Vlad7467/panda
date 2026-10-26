@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Мамкин Скамер | Кабинет</title>
+<title>Мамкин Скамер</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   :root { --bg: #09090b; --surface: #121215; --surface-2: #1a1a1f; --border: rgba(255,255,255,0.08); --border-hover: rgba(255,255,255,0.16); --text-primary: #f4f4f5; --text-secondary: #a1a1aa; --success: #22c55e; --danger: #ff3355; --warn: #f59e0b; --accent: #00d4ff; --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
@@ -39,14 +39,11 @@
   .key-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; position: relative; overflow: hidden; }
   .key-card.primary { border-color: rgba(0,212,255,0.3); }
   .key-card.primary::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
-  .key-card.game { border-color: rgba(34,197,94,0.3); }
-  .key-card.game::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--success), transparent); }
-  .key-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
+  .key-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 8px; }
   .key-name { font-size: 14px; font-weight: 700; }
   .key-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
   .key-badge.primary { background: rgba(0,212,255,0.15); color: var(--accent); }
   .key-badge.fallback { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
-  .key-description { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.45; }
   .key-data-box { background: #000; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--success); word-break: break-all; line-height: 1.6; max-height: 90px; overflow-y: auto; user-select: all; }
   .key-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
   .btn-action { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; font-family: var(--font-main); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px; }
@@ -65,7 +62,7 @@
 
   <div class="glass-card">
     <div class="status-header">
-      <span class="status-title">Статус подписки</span>
+      <span class="status-title">Статус</span>
       <div id="status-badge" class="status-pill loading"><span class="status-dot"></span> Загрузка</div>
     </div>
     <div class="metrics-grid">
@@ -83,7 +80,6 @@
         <span class="key-name">🇩🇪 DE Основной</span>
         <span class="key-badge primary">⭐ XHTTP</span>
       </div>
-      <div class="key-description">Основной профиль. VLESS XHTTP + Reality (SNI max.ru). Лучший обход DPI.</div>
       <div class="key-data-box" id="key-main">Инициализация...</div>
       <div class="key-actions">
         <button class="btn-action" data-key="main">Копировать</button>
@@ -96,7 +92,6 @@
         <span class="key-name">🇩🇪 DE Резервный</span>
         <span class="key-badge fallback">🛡️ TCP</span>
       </div>
-      <div class="key-description">Резервный профиль. VLESS TCP + Reality + Vision + Padding (для iOS и как fallback).</div>
       <div class="key-data-box" id="key-reserve">Инициализация...</div>
       <div class="key-actions">
         <button class="btn-action" data-key="reserve">Копировать</button>
@@ -138,7 +133,7 @@
   }
   async function loadStatus() {
     const badge = document.getElementById("status-badge"); const errEl = document.getElementById("error");
-    if (!tg || !tg.initData) { badge.className = "status-pill error"; badge.innerHTML = '<span class="status-dot"></span> Ошибка'; errEl.innerHTML = `Откройте кабинет через бота.`; return; }
+    if (!tg || !tg.initData) { badge.className = "status-pill error"; badge.innerHTML = '<span class="status-dot"></span> Ошибка'; errEl.innerHTML = `Открой через бота.`; return; }
     try {
       const data = await apiFetch(`/api/status?initData=${encodeURIComponent(tg.initData)}`);
       if (data.active) { badge.className = "status-pill online"; badge.innerHTML = '<span class="status-dot"></span> Активна'; }
@@ -158,7 +153,7 @@
   btn.onclick = async () => {
     if (keysLoading) return;
     if (section.classList.contains("show")) { section.scrollIntoView({ behavior: 'smooth' }); return; }
-    if (!tg || !tg.initData) { errEl.innerHTML = `Откройте через Telegram.`; return; }
+    if (!tg || !tg.initData) { errEl.innerHTML = `Открой через Telegram.`; return; }
     keysLoading = true; errEl.innerHTML = ""; btn.disabled = true; btn.textContent = "Загрузка..."; haptic('impact');
     try {
       const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg.initData)}`);
