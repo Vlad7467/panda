@@ -61,7 +61,6 @@
   .key-name { font-size: 14px; font-weight: 700; }
   .key-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
   .key-badge.primary { background: rgba(0, 212, 255, 0.15); color: var(--accent); }
-  .key-badge.fallback { background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); }
   .key-badge.game { background: rgba(34, 197, 94, 0.15); color: var(--success); }
   .key-description { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.45; }
   .key-data-box { background: #000; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--success); word-break: break-all; line-height: 1.6; max-height: 90px; overflow-y: auto; user-select: all; }
@@ -102,45 +101,16 @@
   <p class="error-msg" id="error"></p>
 
   <div class="keys-container" id="keysSection">
-    <!-- Основной -->
     <div class="key-card primary">
       <div class="key-header">
-        <span class="key-name">🇩🇪 DE Основной</span>
-        <span class="key-badge primary">⭐ XHTTP</span>
+        <span class="key-name">🇩🇪 Универсальная подписка</span>
+        <span class="key-badge primary">⭐ 3 профиля</span>
       </div>
-      <div class="key-description">Лучший профиль для повседневного использования. Максимальная скорость и стабильность.</div>
-      <div class="key-data-box" id="key-hy2">Инициализация...</div>
-      <div class="key-actions">
-        <button class="btn-action" data-key="hy2">Копировать</button>
-        <button class="btn-action launch" data-key="hy2">В INCY</button>
-      </div>
-    </div>
-
-    <!-- Резервный -->
-    <div class="key-card">
-      <div class="key-header">
-        <span class="key-name">🇩🇪 DE Резервный</span>
-        <span class="key-badge fallback">🛡️ TCP · iOS</span>
-      </div>
-      <div class="key-description">Запасной профиль для iPhone/iPad или если основной не работает.</div>
+      <div class="key-description">Одна ссылка на подписку. Внутри — VLESS XHTTP (основной), VLESS TCP (для iOS) и Hysteria2 (для игр). Импортируй в INCY.</div>
       <div class="key-data-box" id="key-vless">Инициализация...</div>
       <div class="key-actions">
         <button class="btn-action" data-key="vless">Копировать</button>
         <button class="btn-action launch" data-key="vless">В INCY</button>
-      </div>
-    </div>
-
-    <!-- Игровой -->
-    <div class="key-card game">
-      <div class="key-header">
-        <span class="key-name">🇩🇪 DE Игровой</span>
-        <span class="key-badge game">🎮 eFootball</span>
-      </div>
-      <div class="key-description">Специальный профиль для eFootball. Стабильный пинг и низкая задержка в матчах.</div>
-      <div class="key-data-box" id="key-game">Инициализация...</div>
-      <div class="key-actions">
-        <button class="btn-action" data-key="game">Копировать</button>
-        <button class="btn-action launch" data-key="game">В INCY</button>
       </div>
     </div>
   </div>
@@ -149,8 +119,10 @@
 </div>
 
 <script>
-  const API = "https://stops-subtle-vernon-pdf.trycloudflare.com";
+  // === КОНФИГУРАЦИЯ ===
+  const API = "https://cryptozzero.dpdns.org";
   const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=llc.itdev.incy";
+
   const tg = window.Telegram?.WebApp;
   try { if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#09090b'); tg.setBackgroundColor('#09090b'); } } catch (e) {}
 
@@ -179,6 +151,7 @@
     const mb = n / (1024 ** 2); if (mb >= 1) return mb.toFixed(1) + " MB";
     return Math.round(n / 1024) + " KB";
   }
+
   function formatDate(iso) {
     if (!iso || iso === "forever" || iso === 0) return "∞";
     try { const d = new Date(iso); return isNaN(d.getTime()) ? "—" : d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch { return "—"; }
@@ -216,13 +189,9 @@
     try {
       const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg.initData)}`);
       const vless = data.vless || "";
-      const xhttp = data.hy2 || data.xhttp || "";
-      const game = data.game || "";
       document.getElementById("key-vless").textContent = vless || "Ошибка получения данных";
-      document.getElementById("key-hy2").textContent   = xhttp || "Ошибка получения данных";
-      document.getElementById("key-game").textContent  = game || "Ошибка получения данных";
-      if (!vless && !xhttp && !game) {
-        errEl.textContent = "Сервер вернул пустые ключи.";
+      if (!vless) {
+        errEl.textContent = "Сервер вернул пустую ссылку.";
         btn.disabled = false; btn.textContent = "Достать ключи"; return;
       }
       section.classList.add("show");
@@ -233,7 +202,6 @@
     } finally { keysLoading = false; }
   };
 
-  // Копирование
   document.querySelectorAll(".btn-action:not(.launch)").forEach(b => {
     b.onclick = async () => {
       const el = document.getElementById("key-" + b.dataset.key);
@@ -254,7 +222,6 @@
     };
   });
 
-  // Открытие INCY с fallback в Play Store
   function openIncy(keyText) {
     const isAndroid = /android/i.test(navigator.userAgent);
     if (!isAndroid) {
