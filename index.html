@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+l<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -54,14 +54,11 @@
   .key-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; position: relative; overflow: hidden; }
   .key-card.primary { border-color: rgba(0, 212, 255, 0.3); }
   .key-card.primary::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
-  .key-card.game { border-color: rgba(34, 197, 94, 0.3); }
-  .key-card.game::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--success), transparent); }
 
   .key-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
   .key-name { font-size: 14px; font-weight: 700; }
   .key-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
   .key-badge.primary { background: rgba(0, 212, 255, 0.15); color: var(--accent); }
-  .key-badge.game { background: rgba(34, 197, 94, 0.15); color: var(--success); }
   .key-description { font-size: 12px; color: var(--text-secondary); margin-bottom: 14px; line-height: 1.45; }
   .key-data-box { background: #000; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--success); word-break: break-all; line-height: 1.6; max-height: 90px; overflow-y: auto; user-select: all; }
   .key-data-box::-webkit-scrollbar { width: 4px; }
@@ -104,9 +101,9 @@
     <div class="key-card primary">
       <div class="key-header">
         <span class="key-name">🇩🇪 Универсальная подписка</span>
-        <span class="key-badge primary">⭐ 3 профиля</span>
+        <span class="key-badge primary">⭐ VLESS + HY2</span>
       </div>
-      <div class="key-description">Одна ссылка на подписку. Внутри — VLESS XHTTP (основной), VLESS TCP (для iOS) и Hysteria2 (для игр). Импортируй в INCY.</div>
+      <div class="key-description">Одна ссылка для всех устройств. Внутри — VLESS XHTTP, VLESS TCP и Hysteria2. Импортируй в INCY.</div>
       <div class="key-data-box" id="key-vless">Инициализация...</div>
       <div class="key-actions">
         <button class="btn-action" data-key="vless">Копировать</button>
@@ -119,12 +116,19 @@
 </div>
 
 <script>
-  // === КОНФИГУРАЦИЯ ===
-  const API = "https://cryptozzero.dpdns.org";
+  // === НОВЫЙ АДРЕС ЧЕРЕЗ CLOUDFLARE WORKER ===
+  const API = "https://wild-rain-661e.vladislavmacko2011.workers.dev";
   const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=llc.itdev.incy";
-
   const tg = window.Telegram?.WebApp;
-  try { if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#09090b'); tg.setBackgroundColor('#09090b'); } } catch (e) {}
+  
+  try { 
+    if (tg) { 
+      tg.ready(); 
+      tg.expand(); 
+      tg.setHeaderColor('#09090b'); 
+      tg.setBackgroundColor('#09090b'); 
+    } 
+  } catch (e) {}
 
   const haptic = (t) => { try { if (t === 'impact') tg?.HapticFeedback?.impactOccurred?.('light'); if (t === 'notify') tg?.HapticFeedback?.notificationOccurred?.('success'); } catch {} };
 
@@ -139,8 +143,14 @@
     const res = await fetch(`${API}${path}`, { cache: 'no-store' });
     const ct = res.headers.get('content-type') || '';
     const text = await res.text();
-    if (!ct.includes('application/json')) throw new Error(`Ошибка протокола (${res.status})`);
-    let data; try { data = JSON.parse(text); } catch { throw new Error('Поврежденные данные'); }
+    
+    if (!ct.includes('application/json')) {
+        throw new Error(`Ошибка протокола (${res.status})`);
+    }
+    
+    let data; 
+    try { data = JSON.parse(text); } catch { throw new Error('Поврежденные данные'); }
+    
     if (!res.ok) throw new Error(data?.error || data?.msg || `HTTP ${res.status}`);
     return data;
   }
@@ -154,24 +164,35 @@
 
   function formatDate(iso) {
     if (!iso || iso === "forever" || iso === 0) return "∞";
-    try { const d = new Date(iso); return isNaN(d.getTime()) ? "—" : d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch { return "—"; }
+    try { const d = new Date(iso * 1000); return isNaN(d.getTime()) ? "—" : d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch { return "—"; }
   }
 
   async function loadStatus() {
-    const badge = document.getElementById("status-badge"); const errEl = document.getElementById("error");
+    const badge = document.getElementById("status-badge"); 
+    const errEl = document.getElementById("error");
+    
     if (!tg || !tg.initData) {
-      badge.className = "status-pill error"; badge.innerHTML = '<span class="status-dot"></span> Ошибка';
-      errEl.innerHTML = `Откройте кабинет через бота.`; return;
+      badge.className = "status-pill error"; 
+      badge.innerHTML = '<span class="status-dot"></span> Ошибка';
+      errEl.innerHTML = `Откройте кабинет через бота.`; 
+      return;
     }
+    
     try {
       const data = await apiFetch(`/api/status?initData=${encodeURIComponent(tg.initData)}`);
-      if (data.active) { badge.className = "status-pill online"; badge.innerHTML = '<span class="status-dot"></span> Активна'; }
-      else { badge.className = "status-pill offline"; badge.innerHTML = '<span class="status-dot"></span> Неактивна'; }
+      if (data.active) { 
+          badge.className = "status-pill online"; 
+          badge.innerHTML = '<span class="status-dot"></span> Активна'; 
+      } else { 
+          badge.className = "status-pill offline"; 
+          badge.innerHTML = '<span class="status-dot"></span> Неактивна'; 
+      }
       document.getElementById("ui-expiry").textContent = formatDate(data.expiry);
       document.getElementById("ui-traffic").textContent = formatTraffic((Number(data.traffic_gb) || 0) * 1024 ** 3);
       errEl.innerHTML = "";
     } catch (e) {
-      badge.className = "status-pill error"; badge.innerHTML = '<span class="status-dot"></span> Ошибка';
+      badge.className = "status-pill error"; 
+      badge.innerHTML = '<span class="status-dot"></span> Ошибка';
       errEl.innerHTML = `${e.message}<br><button class="retry-btn" onclick="loadStatus()">Повторить</button>`;
     }
   }
@@ -185,15 +206,24 @@
     if (keysLoading) return;
     if (section.classList.contains("show")) { section.scrollIntoView({ behavior: 'smooth' }); return; }
     if (!tg || !tg.initData) { errEl.innerHTML = `Откройте через Telegram.`; return; }
-    keysLoading = true; errEl.innerHTML = ""; btn.disabled = true; btn.textContent = "Загрузка..."; haptic('impact');
+    
+    keysLoading = true; 
+    errEl.innerHTML = ""; 
+    btn.disabled = true; 
+    btn.textContent = "Загрузка..."; 
+    haptic('impact');
+    
     try {
       const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg.initData)}`);
       const vless = data.vless || "";
+      
       document.getElementById("key-vless").textContent = vless || "Ошибка получения данных";
+      
       if (!vless) {
         errEl.textContent = "Сервер вернул пустую ссылку.";
         btn.disabled = false; btn.textContent = "Достать ключи"; return;
       }
+      
       section.classList.add("show");
       btn.textContent = "Ключи ниже 👇"; btn.disabled = false;
       section.scrollIntoView({ behavior: 'smooth' }); haptic('notify');
