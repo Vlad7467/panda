@@ -203,7 +203,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
 'use strict';
 
 const API = "https://wild-rain-661e.vladislavmacko2011.workers.dev";
-const CACHE_KEY = 'vpn_keys_v3';
+const CACHE_KEY = 'vpn_keys_v4';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
 
 const tg = window.Telegram?.WebApp;
@@ -295,18 +295,21 @@ function downloadJson(key) {
   const b = document.getElementById("json-" + key);
   if (!b || !b.dataset.json) { showToast("❌ JSON ещё не готов"); return; }
   try { JSON.parse(b.dataset.json); } catch(e) { showToast("❌ JSON невалидный"); return; }
+  
   const names = {
     "main":       "DE-Osnovnoy.json",
     "reserve":    "DE-Rezervny.json",
     "my_private": "DE-Lichny.json",
     "relay":      "RU-Mobilny.json",
   };
+  
   const blob = new Blob([b.dataset.json], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url; a.download = names[key] || 'config.json';
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+  
   showToast("📥 " + (names[key] || 'JSON') + " скачан");
   haptic('notify');
 }
