@@ -3,211 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Мамкин Скамер</title>
+<title>Мамкин Скамер | Кабинет</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-  :root { --bg: #09090b; --surface: #121215; --surface-2: #1a1a1f; --border: rgba(255,255,255,0.08); --border-hover: rgba(255,255,255,0.16); --text-primary: #f4f4f5; --text-secondary: #a1a1aa; --success: #22c55e; --danger: #ff3355; --warn: #f59e0b; --accent: #00d4ff; --font-main: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif; --font-mono: "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace; }
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  body { font-family: var(--font-main); background-color: var(--bg); color: var(--text-primary); min-height: 100vh; display: flex; justify-content: center; -webkit-font-smoothing: antialiased; }
-  .app-container { width: 100%; max-width: 440px; padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; }
-  .header { display: flex; align-items: center; gap: 14px; padding-bottom: 8px; }
-  .logo-icon { width: 48px; height: 48px; background: var(--surface-2); border-radius: 14px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 24px; }
-  .brand-title { font-size: 22px; font-weight: 700; letter-spacing: -0.6px; }
-  .glass-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 20px; }
-  .status-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-  .status-title { font-size: 15px; font-weight: 600; }
-  .status-pill { display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; padding: 6px 12px; border-radius: 20px; background: var(--surface-2); border: 1px solid var(--border); text-transform: uppercase; letter-spacing: 0.5px; }
-  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .status-pill.online { color: var(--success); border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.1); }
-  .status-pill.offline { color: var(--danger); border-color: rgba(255,51,85,0.3); background: rgba(255,51,85,0.1); }
-  .status-pill.loading { color: var(--text-secondary); }
-  .status-pill.error { color: var(--warn); border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.1); }
-  .status-pill.online .status-dot { box-shadow: 0 0 8px var(--success); animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .metrics-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  .metric-item { display: flex; flex-direction: column; gap: 6px; }
-  .metric-value { font-family: var(--font-mono); font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
-  .metric-label { font-size: 11px; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
-  .btn-primary { width: 100%; padding: 16px; background: var(--text-primary); color: #000; border: none; border-radius: 14px; font-family: var(--font-main); font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; text-transform: uppercase; letter-spacing: 0.3px; }
-  .btn-primary:active { transform: scale(0.98); }
-  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-  .error-msg { color: var(--danger); font-size: 13px; text-align: center; min-height: 16px; font-weight: 500; padding: 0 8px; line-height: 1.4; }
-  .retry-btn { margin-top: 12px; background: transparent; border: 1px solid var(--border); color: var(--text-primary); padding: 12px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; width: 100%; }
-  .keys-container { display: none; flex-direction: column; gap: 16px; animation: slideUp 0.4s cubic-bezier(0.16,1,0.3,1); }
-  .keys-container.show { display: flex; }
-  @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
-  .key-card { background: var(--surface-2); border: 1px solid var(--border); border-radius: 16px; padding: 18px; position: relative; overflow: hidden; }
-  .key-card.primary { border-color: rgba(0,212,255,0.3); }
-  .key-card.primary::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); }
-  .key-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; gap: 8px; }
-  .key-name { font-size: 14px; font-weight: 700; }
-  .key-badge { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
-  .key-badge.primary { background: rgba(0,212,255,0.15); color: var(--accent); }
-  .key-badge.fallback { background: rgba(255,255,255,0.05); color: var(--text-secondary); }
-  .key-data-box { background: #000; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 14px; font-family: var(--font-mono); font-size: 10px; color: var(--success); word-break: break-all; line-height: 1.6; max-height: 90px; overflow-y: auto; user-select: all; }
-  .key-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .btn-action { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); color: var(--text-primary); border-radius: 10px; font-family: var(--font-main); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 6px; }
-  .btn-action.success { background: rgba(34,197,94,0.1); border-color: rgba(34,197,94,0.3); color: var(--success); }
-  .btn-action.launch { border-color: rgba(255,255,255,0.2); font-weight: 700; }
-  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface-2); border: 1px solid var(--border-hover); color: var(--text-primary); padding: 12px 20px; border-radius: 12px; font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s; z-index: 999; pointer-events: none; max-width: 90%; text-align: center; }
-  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+:root{--bg:#09090b;--surface:#121215;--surface-2:#1a1a1f;--border:rgba(255,255,255,.08);--border-hover:rgba(255,255,255,.16);--text-primary:#f4f4f5;--text-secondary:#a1a1aa;--success:#22c55e;--danger:#ff3355;--warn:#f59e0b;--accent:#00d4ff;--font-main:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;--font-mono:"SF Mono","JetBrains Mono",Menlo,Consolas,monospace}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font-main);background:var(--bg);color:var(--text-primary);min-height:100vh;display:flex;justify-content:center;-webkit-font-smoothing:antialiased}
+.app-container{width:100%;max-width:440px;padding:24px 20px;display:flex;flex-direction:column;gap:16px}
+.header{display:flex;align-items:center;gap:14px;padding-bottom:8px}
+.logo-icon{width:48px;height:48px;background:var(--surface-2);border-radius:14px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:24px}
+.brand-title{font-size:22px;font-weight:700;letter-spacing:-.6px}
+.glass-card{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.status-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.status-title{font-size:15px;font-weight:600}
+.status-pill{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:6px 12px;border-radius:20px;background:var(--surface-2);border:1px solid var(--border);text-transform:uppercase;letter-spacing:.5px}
+.status-dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.status-pill.online{color:var(--success);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.1)}
+.status-pill.offline{color:var(--danger);border-color:rgba(255,51,85,.3);background:rgba(255,51,85,.1)}
+.status-pill.loading{color:var(--text-secondary)}
+.status-pill.error{color:var(--warn);border-color:rgba(245,158,11,.3);background:rgba(245,158,11,.1)}
+.status-pill.online .status-dot{box-shadow:0 0 8px var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.metrics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.metric-item{display:flex;flex-direction:column;gap:6px}
+.metric-value{font-family:var(--font-mono);font-size:20px;font-weight:700;letter-spacing:-.5px}
+.metric-label{font-size:11px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.5px}
+.btn-primary{width:100%;padding:16px;background:var(--text-primary);color:#000;border:none;border-radius:14px;font-family:var(--font-main);font-size:15px;font-weight:800;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:6px;text-transform:uppercase;letter-spacing:.3px}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{opacity:.5;cursor:not-allowed}
+.error-msg{color:var(--danger);font-size:13px;text-align:center;min-height:16px;font-weight:500;padding:0 8px;line-height:1.4}
+.retry-btn{margin-top:12px;background:transparent;border:1px solid var(--border);color:var(--text-primary);padding:12px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;width:100%}
+.keys-container{display:none;flex-direction:column;gap:16px;animation:slideUp .4s cubic-bezier(.16,1,.3,1)}
+.keys-container.show{display:flex}
+@keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.key-card{background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:18px;position:relative;overflow:hidden}
+.key-card.primary{border-color:rgba(0,212,255,.3)}
+.key-card.primary::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.key-card.game{border-color:rgba(34,197,94,.3)}
+.key-card.game::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--success),transparent)}
+.key-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;gap:8px}
+.key-name{font-size:14px;font-weight:700}
+.key-badge{font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;white-space:nowrap}
+.key-badge.primary{background:rgba(0,212,255,.15);color:var(--accent)}
+.key-badge.fallback{background:rgba(255,255,255,.05);color:var(--text-secondary)}
+.key-badge.game{background:rgba(34,197,94,.15);color:var(--success)}
+.key-data-box{background:#000;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:14px;font-family:var(--font-mono);font-size:10px;color:var(--success);word-break:break-all;line-height:1.6;max-height:90px;overflow-y:auto;user-select:all}
+.key-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-action{width:100%;padding:12px;background:transparent;border:1px solid var(--border);color:var(--text-primary);border-radius:10px;font-family:var(--font-main);font-size:12px;font-weight:600;cursor:pointer;transition:all .2s;text-transform:uppercase;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-action.success{background:rgba(34,197,94,.1);border-color:rgba(34,197,94,.3);color:var(--success)}
+.btn-action.launch{border-color:rgba(255,255,255,.2);font-weight:700}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--surface-2);border:1px solid var(--border-hover);color:var(--text-primary);padding:12px 20px;border-radius:12px;font-size:13px;font-weight:600;opacity:0;transition:all .3s;z-index:999;pointer-events:none;max-width:90%;text-align:center}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 </style>
 </head>
 <body>
 <div class="app-container">
-  <header class="header">
-    <div class="logo-icon">🕶️</div>
-    <div class="brand-title">Мамкин Скамер</div>
-  </header>
-
-  <div class="glass-card">
-    <div class="status-header">
-      <span class="status-title">Статус</span>
-      <div id="status-badge" class="status-pill loading"><span class="status-dot"></span> Загрузка</div>
-    </div>
-    <div class="metrics-grid">
-      <div class="metric-item"><span class="metric-value" id="ui-expiry">—</span><span class="metric-label">Действует до</span></div>
-      <div class="metric-item"><span class="metric-value" id="ui-traffic">0 MB</span><span class="metric-label">Скачано</span></div>
-    </div>
-  </div>
-
-  <button class="btn-primary" id="getKeysBtn">Достать ключи</button>
-  <p class="error-msg" id="error"></p>
-
-  <div class="keys-container" id="keysSection">
-    <div class="key-card primary">
-      <div class="key-header">
-        <span class="key-name">🇩🇪 DE Основной</span>
-        <span class="key-badge primary">⭐ XHTTP</span>
-      </div>
-      <div class="key-data-box" id="key-main">Инициализация...</div>
-      <div class="key-actions">
-        <button class="btn-action" data-key="main">Копировать</button>
-        <button class="btn-action launch" data-key="main">В INCY</button>
-      </div>
-    </div>
-
-    <div class="key-card">
-      <div class="key-header">
-        <span class="key-name">🇩🇪 DE Резервный</span>
-        <span class="key-badge fallback">🛡️ TCP</span>
-      </div>
-      <div class="key-data-box" id="key-reserve">Инициализация...</div>
-      <div class="key-actions">
-        <button class="btn-action" data-key="reserve">Копировать</button>
-        <button class="btn-action launch" data-key="reserve">В INCY</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
+<header class="header"><div class="logo-icon">🕶️</div><div class="brand-title">Мамкин Скамер</div></header>
+<div class="glass-card">
+<div class="status-header"><span class="status-title">Статус подписки</span><div id="status-badge" class="status-pill loading"><span class="status-dot"></span> Загрузка</div></div>
+<div class="metrics-grid">
+<div class="metric-item"><span class="metric-value" id="ui-expiry">—</span><span class="metric-label">Действует до</span></div>
+<div class="metric-item"><span class="metric-value" id="ui-traffic">0 MB</span><span class="metric-label">Скачано</span></div>
 </div>
-
+</div>
+<button class="btn-primary" id="getKeysBtn">Достать ключи</button>
+<p class="error-msg" id="error"></p>
+<div class="keys-container" id="keysSection">
+<div class="key-card primary">
+<div class="key-header"><span class="key-name">🇩🇪 DE-1 (Основной)</span><span class="key-badge primary">⭐ XHTTP</span></div>
+<div class="key-data-box" id="key-main">Инициализация...</div>
+<div class="key-actions"><button class="btn-action" data-key="main">Копировать</button><button class="btn-action launch" data-key="main">В INCY</button></div>
+</div>
+<div class="key-card">
+<div class="key-header"><span class="key-name">🇩🇪 DE-2 (Резервный)</span><span class="key-badge fallback">🛡️ TCP</span></div>
+<div class="key-data-box" id="key-reserve">Инициализация...</div>
+<div class="key-actions"><button class="btn-action" data-key="reserve">Копировать</button><button class="btn-action launch" data-key="reserve">В INCY</button></div>
+</div>
+<div class="key-card game">
+<div class="key-header"><span class="key-name">🇷🇺 RU-1 (Мобильный)</span><span class="key-badge game">📱 LTE/4G</span></div>
+<div class="key-data-box" id="key-relay">Инициализация...</div>
+<div class="key-actions"><button class="btn-action" data-key="relay">Копировать</button><button class="btn-action launch" data-key="relay">В INCY</button></div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+</div>
 <script>
-  const API = "https://wild-rain-661e.vladislavmacko2011.workers.dev";
-  const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=llc.itdev.incy";
-  const tg = window.Telegram?.WebApp;
-  try { if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#09090b'); tg.setBackgroundColor('#09090b'); } } catch(e) {}
-  const haptic = (t) => { try { if (t === 'impact') tg?.HapticFeedback?.impactOccurred?.('light'); if (t === 'notify') tg?.HapticFeedback?.notificationOccurred?.('success'); } catch {} };
-  function showToast(text) {
-    const toast = document.getElementById("toast");
-    toast.textContent = text; toast.classList.add("show");
-    setTimeout(() => toast.classList.remove("show"), 2500);
-  }
-  async function apiFetch(path) {
-    const res = await fetch(`${API}${path}`, { cache: 'no-store' });
-    const text = await res.text();
-    let data; try { data = JSON.parse(text); } catch { throw new Error('Ошибка протокола'); }
-    if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
-    return data;
-  }
-  function formatTraffic(bytes) {
-    const n = Number(bytes) || 0; if (n <= 0) return "0 MB";
-    const gb = n / (1024 ** 3); if (gb >= 1) return gb.toFixed(2) + " GB";
-    const mb = n / (1024 ** 2); if (mb >= 1) return mb.toFixed(1) + " MB";
-    return Math.round(n / 1024) + " KB";
-  }
-  function formatDate(iso) {
-    if (!iso || iso === "forever" || iso === 0) return "∞";
-    try { const d = new Date(iso * 1000); return isNaN(d.getTime()) ? "—" : d.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' }); } catch { return "—"; }
-  }
-  async function loadStatus() {
-    const badge = document.getElementById("status-badge"); const errEl = document.getElementById("error");
-    if (!tg || !tg.initData) { badge.className = "status-pill error"; badge.innerHTML = '<span class="status-dot"></span> Ошибка'; errEl.innerHTML = `Открой через бота.`; return; }
-    try {
-      const data = await apiFetch(`/api/status?initData=${encodeURIComponent(tg.initData)}`);
-      if (data.active) { badge.className = "status-pill online"; badge.innerHTML = '<span class="status-dot"></span> Активна'; }
-      else { badge.className = "status-pill offline"; badge.innerHTML = '<span class="status-dot"></span> Неактивна'; }
-      document.getElementById("ui-expiry").textContent = formatDate(data.expiry);
-      document.getElementById("ui-traffic").textContent = formatTraffic((Number(data.traffic_gb) || 0) * 1024 ** 3);
-      errEl.innerHTML = "";
-    } catch (e) {
-      badge.className = "status-pill error"; badge.innerHTML = '<span class="status-dot"></span> Ошибка';
-      errEl.innerHTML = `${e.message}<br><button class="retry-btn" onclick="loadStatus()">Повторить</button>`;
-    }
-  }
-  const btn = document.getElementById("getKeysBtn");
-  const section = document.getElementById("keysSection");
-  const errEl = document.getElementById("error");
-  let keysLoading = false;
-  btn.onclick = async () => {
-    if (keysLoading) return;
-    if (section.classList.contains("show")) { section.scrollIntoView({ behavior: 'smooth' }); return; }
-    if (!tg || !tg.initData) { errEl.innerHTML = `Открой через Telegram.`; return; }
-    keysLoading = true; errEl.innerHTML = ""; btn.disabled = true; btn.textContent = "Загрузка..."; haptic('impact');
-    try {
-      const data = await apiFetch(`/api/keys?initData=${encodeURIComponent(tg.initData)}`);
-      document.getElementById("key-main").textContent = data.main || "Ошибка";
-      document.getElementById("key-reserve").textContent = data.reserve || "Ошибка";
-      section.classList.add("show");
-      btn.textContent = "Ключи ниже 👇"; btn.disabled = false;
-      section.scrollIntoView({ behavior: 'smooth' }); haptic('notify');
-    } catch (e) {
-      errEl.textContent = e.message; btn.disabled = false; btn.textContent = "Достать ключи";
-    } finally { keysLoading = false; }
-  };
-  document.querySelectorAll(".btn-action:not(.launch)").forEach(b => {
-    b.onclick = async () => {
-      const el = document.getElementById("key-" + b.dataset.key); const text = el.textContent || "";
-      if (!text || text.includes("Ошибка") || text === "Инициализация...") return;
-      let ok = false;
-      try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch {}
-      if (!ok) { try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta); } catch { ok = false; } }
-      if (ok) { haptic('notify'); const orig = b.textContent; b.textContent = "✓"; b.classList.add("success"); setTimeout(() => { b.textContent = orig; b.classList.remove("success"); }, 2000); }
-    };
-  });
-  function openIncy(keyText) {
-    const isAndroid = /android/i.test(navigator.userAgent);
-    if (!isAndroid) {
-      navigator.clipboard?.writeText(keyText).catch(() => {});
-      showToast("Ключ скопирован. Открой клиент и вставь."); return;
-    }
-    const deepLink = `incy://add/${encodeURIComponent(keyText)}`;
-    let appOpened = false;
-    const onBlur = () => { appOpened = true; };
-    window.addEventListener('blur', onBlur, { once: true });
-    try { if (tg && typeof tg.openLink === 'function') tg.openLink(deepLink); else window.location.href = deepLink; }
-    catch (e) { window.location.href = deepLink; }
-    setTimeout(() => {
-      window.removeEventListener('blur', onBlur);
-      if (!appOpened && document.visibilityState === 'visible') {
-        showToast("INCY не установлен. Открываем Google Play...");
-        setTimeout(() => {
-          if (tg && typeof tg.openLink === 'function') tg.openLink(PLAY_STORE_URL);
-          else window.location.href = PLAY_STORE_URL;
-        }, 800);
-      }
-    }, 1500);
-  }
-  document.querySelectorAll(".btn-action.launch").forEach(b => {
-    b.onclick = () => {
-      const el = document.getElementById("key-" + b.dataset.key);
-      const text = el.textContent || "";
-      if (!text || text.includes("Ошибка") || text === "Инициализация...") { showToast("Сначала получи ключи."); return; }
-      haptic('impact'); openIncy(text);
-    };
-  });
-  loadStatus(); setInterval(loadStatus, 30000);
+const API="https://wild-rain-661e.vladislavmacko2011.workers.dev";
+const PLAY_STORE_URL="https://play.google.com/store/apps/details?id=llc.itdev.incy";
+const tg=window.Telegram?.WebApp;
+try{if(tg){tg.ready();tg.expand();tg.setHeaderColor('#09090b');tg.setBackgroundColor('#09090b');}}catch(e){}
+const haptic=(t)=>{try{if(t==='impact')tg?.HapticFeedback?.impactOccurred?.('light');if(t==='notify')tg?.HapticFeedback?.notificationOccurred?.('success');}catch{}};
+function showToast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("show");setTimeout(()=>el.classList.remove("show"),2500);}
+async function apiFetch(path){const res=await fetch(`${API}${path}`,{cache:'no-store'});const text=await res.text();let data;try{data=JSON.parse(text);}catch{throw new Error('Ошибка протокола');}if(!res.ok)throw new Error(data?.error||`HTTP ${res.status}`);return data;}
+function formatTraffic(bytes){const n=Number(bytes)||0;if(n<=0)return"0 MB";const gb=n/(1024**3);if(gb>=1)return gb.toFixed(2)+" GB";const mb=n/(1024**2);if(mb>=1)return mb.toFixed(1)+" MB";return Math.round(n/1024)+" KB";}
+function formatDate(iso){if(!iso||iso==="forever"||iso===0)return"∞";try{const d=new Date(iso*1000);return isNaN(d.getTime())?"—":d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});}catch{return"—";}}
+async function loadStatus(){const badge=document.getElementById("status-badge");const errEl=document.getElementById("error");if(!tg||!tg.initData){badge.className="status-pill error";badge.innerHTML='<span class="status-dot"></span> Ошибка';errEl.innerHTML=`Открой через бота.`;return;}try{const data=await apiFetch(`/api/status?initData=${encodeURIComponent(tg.initData)}`);if(data.active){badge.className="status-pill online";badge.innerHTML='<span class="status-dot"></span> Активна';}else{badge.className="status-pill offline";badge.innerHTML='<span class="status-dot"></span> Неактивна';}document.getElementById("ui-expiry").textContent=formatDate(data.expiry);document.getElementById("ui-traffic").textContent=formatTraffic((Number(data.traffic_gb)||0)*1024**3);errEl.innerHTML="";}catch(e){badge.className="status-pill error";badge.innerHTML='<span class="status-dot"></span> Ошибка';errEl.innerHTML=`${e.message}<br><button class="retry-btn" onclick="loadStatus()">Повторить</button>`;}}
+const btn=document.getElementById("getKeysBtn");const section=document.getElementById("keysSection");const errEl=document.getElementById("error");let keysLoading=false;
+function renderKeys(data){document.getElementById("key-main").textContent=data.main||"Ошибка";document.getElementById("key-reserve").textContent=data.reserve||"Ошибка";document.getElementById("key-relay").textContent=data.relay||"Ошибка";}
+async function fetchKeys(){keysLoading=true;errEl.innerHTML="";btn.disabled=true;btn.textContent="Загрузка...";haptic('impact');try{const data=await apiFetch(`/api/keys?initData=${encodeURIComponent(tg.initData)}`);localStorage.setItem('vpn_keys',JSON.stringify(data));renderKeys(data);section.classList.add("show");btn.textContent="Ключи ниже 👇";btn.disabled=false;section.scrollIntoView({behavior:'smooth'});haptic('notify');}catch(e){errEl.textContent=e.message;btn.disabled=false;btn.textContent="Достать ключи";}finally{keysLoading=false;}}
+btn.onclick=()=>{if(keysLoading)return;if(section.classList.contains("show")){section.scrollIntoView({behavior:'smooth'});return;}if(!tg||!tg.initData){errEl.innerHTML=`Открой через Telegram.`;return;}fetchKeys();};
+// ФИКС БАГА: показываем закэшированные ключи при входе
+const cached=localStorage.getItem('vpn_keys');if(cached){try{renderKeys(JSON.parse(cached));section.classList.add("show");btn.textContent="Ключи ниже 👇";}catch(e){}}
+document.querySelectorAll(".btn-action:not(.launch)").forEach(b=>{b.onclick=async()=>{const el=document.getElementById("key-"+b.dataset.key);const text=el.textContent||"";if(!text||text.includes("Ошибка")||text==="Инициализация...")return;let ok=false;try{if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);ok=true;}}catch{}if(!ok){try{const ta=document.createElement("textarea");ta.value=text;document.body.appendChild(ta);ta.select();ok=document.execCommand('copy');document.body.removeChild(ta);}catch{ok=false;}}if(ok){haptic('notify');const orig=b.textContent;b.textContent="✓";b.classList.add("success");setTimeout(()=>{b.textContent=orig;b.classList.remove("success");},2000);}};});
+function openIncy(k){const isAndroid=/android/i.test(navigator.userAgent);if(!isAndroid){navigator.clipboard?.writeText(k).catch(()=>{});showToast("Ключ скопирован. Открой клиент и вставь.");return;}const dl=`incy://add/${encodeURIComponent(k)}`;let opened=false;const onBlur=()=>{opened=true;};window.addEventListener('blur',onBlur,{once:true});try{if(tg&&typeof tg.openLink==='function')tg.openLink(dl);else window.location.href=dl;}catch(e){window.location.href=dl;}setTimeout(()=>{window.removeEventListener('blur',onBlur);if(!opened&&document.visibilityState==='visible'){showToast("INCY не установлен. Открываем Google Play...");setTimeout(()=>{if(tg&&typeof tg.openLink==='function')tg.openLink(PLAY_STORE_URL);else window.location.href=PLAY_STORE_URL;},800);}},1500);}
+document.querySelectorAll(".btn-action.launch").forEach(b=>{b.onclick=()=>{const el=document.getElementById("key-"+b.dataset.key);const text=el.textContent||"";if(!text||text.includes("Ошибка")||text==="Инициализация..."){showToast("Сначала получи ключи.");return;}haptic('impact');openIncy(text);};});
+loadStatus();setInterval(loadStatus,30000);
 </script>
 </body>
 </html>
