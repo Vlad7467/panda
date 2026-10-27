@@ -57,25 +57,17 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
 .key-card.primary::before { content:""; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),transparent); }
 .key-card.game { border-color:rgba(34,197,94,.3); }
 .key-card.game::before { content:""; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--success),transparent); }
-.key-card.hy2 { border-color:rgba(245,158,11,.3); }
-.key-card.hy2::before { content:""; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--warn),transparent); }
-.key-card.private { border-color:rgba(156,124,255,.35); }
-.key-card.private::before { content:""; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--purple),transparent); }
 
 .key-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; gap:8px; }
 .key-name { font-size:14px; font-weight:700; }
 .key-badge { font-size:11px; font-weight:600; padding:3px 8px; border-radius:6px; white-space:nowrap; }
 .key-badge.primary { background:rgba(0,212,255,.15); color:var(--accent); }
-.key-badge.fallback { background:rgba(255,255,255,.05); color:var(--text-secondary); }
 .key-badge.game { background:rgba(34,197,94,.15); color:var(--success); }
-.key-badge.hy2 { background:rgba(245,158,11,.15); color:var(--warn); }
-.key-badge.private { background:rgba(156,124,255,.15); color:var(--purple); }
 
 .key-data-box { background:#000; border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:14px; font-family:var(--font-mono); font-size:10px; color:var(--success); word-break:break-all; line-height:1.6; max-height:90px; overflow-y:auto; user-select:all; }
 
 .key-actions { display:grid; grid-template-columns:1fr; gap:8px; }
 .btn-action { width:100%; padding:14px; background:transparent; border:1px solid var(--border); color:var(--text-primary); border-radius:10px; font-family:var(--font-main); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:6px; }
-.btn-action.success { background:rgba(34,197,94,.1); border-color:rgba(34,197,94,.3); color:var(--success); }
 .btn-action.json-btn { background:rgba(156,124,255,.08); border-color:rgba(156,124,255,.35); color:var(--purple); font-weight:700; display:none; }
 .btn-action.json-btn:active { background:rgba(156,124,255,.2); }
 
@@ -116,63 +108,27 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
   <p class="error-msg" id="error"></p>
 
   <div class="keys-container" id="keysSection">
-    <!-- DE Основной (XHTTP) -->
+    <!-- DE Основной (8443) -->
     <div class="key-card primary">
       <div class="key-header">
-        <span class="key-name">🇩🇪 DE Основной (XHTTP)</span>
+        <span class="key-name">🇩🇪 DE Основной (8443)</span>
         <span class="key-badge primary">⚡ Быстрый</span>
       </div>
-      <div class="key-data-box" id="key-main">Инициализация...</div>
-      <div class="key-actions">
-        <button class="btn-action json-btn" id="json-main" data-key="main">📥 Скачать JSON</button>
-      </div>
-    </div>
-
-    <!-- DE Резервный (TCP+Vision) -->
-    <div class="key-card">
-      <div class="key-header">
-        <span class="key-name">🇩🇪 DE Резервный (TCP+Vision)</span>
-        <span class="key-badge fallback">🛡️ Классика</span>
-      </div>
-      <div class="key-data-box" id="key-reserve">Инициализация...</div>
-      <div class="key-actions">
-        <button class="btn-action json-btn" id="json-reserve" data-key="reserve">📥 Скачать JSON</button>
-      </div>
-    </div>
-
-    <!-- DE Личный (8443) -->
-    <div class="key-card private">
-      <div class="key-header">
-        <span class="key-name">🇩🇪 DE Личный (8443)</span>
-        <span class="key-badge private">🔒 Персональный</span>
-      </div>
-      <div class="key-data-box" id="key-my_private">Инициализация...</div>
+      <div class="key-data-box" id="key-my_private">Файл конфигурации готов</div>
       <div class="key-actions">
         <button class="btn-action json-btn" id="json-my_private" data-key="my_private">📥 Скачать JSON</button>
       </div>
     </div>
 
-    <!-- RU Мобильный (Каскад) -->
+    <!-- RU Игровой (Каскад) -->
     <div class="key-card game">
       <div class="key-header">
-        <span class="key-name">🇷🇺 RU Мобильный (Каскад)</span>
-        <span class="key-badge game">📱 LTE/4G</span>
+        <span class="key-name">🇷🇺 RU Игровой (Каскад)</span>
+        <span class="key-badge game">🎮 Низкий пинг</span>
       </div>
-      <div class="key-data-box" id="key-relay">Инициализация...</div>
+      <div class="key-data-box" id="key-relay">Файл конфигурации готов</div>
       <div class="key-actions">
         <button class="btn-action json-btn" id="json-relay" data-key="relay">📥 Скачать JSON</button>
-      </div>
-    </div>
-
-    <!-- DE Игровой (Hysteria2) -->
-    <div class="key-card hy2">
-      <div class="key-header">
-        <span class="key-name">🇩🇪 DE Игровой (Hysteria2)</span>
-        <span class="key-badge hy2">🎮 Низкий пинг</span>
-      </div>
-      <div class="key-data-box" id="key-hy2">Инициализация...</div>
-      <div class="key-actions">
-        <button class="btn-action" data-key="hy2">📋 Копировать ссылку</button>
       </div>
     </div>
   </div>
@@ -195,7 +151,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
 'use strict';
 
 const API = "https://wild-rain-661e.vladislavmacko2011.workers.dev";
-const CACHE_KEY = 'vpn_keys_v5';
+const CACHE_KEY = 'vpn_keys_v6';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
 
 const tg = window.Telegram?.WebApp;
@@ -256,22 +212,11 @@ const modal = document.getElementById("reissueModal");
 let keysLoading = false;
 
 function renderKeys(data) {
-  // Для тех у кого есть JSON, скрываем текстовое поле, так как будем качать файлом
-  document.getElementById("key-main").textContent = data.cfg_main ? "Файл конфигурации готов" : (data.main || "Ошибка");
-  document.getElementById("key-reserve").textContent = data.cfg_reserve ? "Файл конфигурации готов" : (data.reserve || "Ошибка");
-  document.getElementById("key-my_private").textContent = data.cfg_my_private ? "Файл конфигурации готов" : "Ошибка";
-  document.getElementById("key-relay").textContent = data.cfg_relay ? "Файл конфигурации готов" : (data.relay || "Ошибка");
-  
-  // HY-2 оставляем текстом
-  document.getElementById("key-hy2").textContent = data.hy2 || "Ошибка";
-  
   toggleJsonButtons(data);
 }
 
 function toggleJsonButtons(data) {
   const map = {
-    "main":       data.cfg_main,
-    "reserve":    data.cfg_reserve,
     "my_private": data.cfg_my_private,
     "relay":      data.cfg_relay,
   };
@@ -293,10 +238,8 @@ function downloadJson(key) {
   try { JSON.parse(b.dataset.json); } catch(e) { showToast("❌ JSON невалидный"); return; }
   
   const names = {
-    "main":       "DE-Osnovnoy.json",
-    "reserve":    "DE-Rezervny.json",
-    "my_private": "DE-Lichny.json",
-    "relay":      "RU-Mobilny.json",
+    "my_private": "DE-Osnovnoy.json",
+    "relay":      "RU-Igrovoy.json",
   };
   
   const blob = new Blob([b.dataset.json], { type: 'application/json' });
@@ -341,19 +284,6 @@ btn.onclick = () => {
 reissueBtn.onclick = () => { if (keysLoading) return; modal.classList.add("show"); haptic('impact'); };
 document.getElementById("cancelReissue").onclick = () => modal.classList.remove("show");
 document.getElementById("confirmReissue").onclick = () => { modal.classList.remove("show"); fetchKeys(true); };
-
-// Оставляем копирование ТОЛЬКО для HY-2
-document.querySelectorAll(".btn-action:not(.json-btn)").forEach(b => {
-  b.onclick = async () => {
-    const el = document.getElementById("key-" + b.dataset.key);
-    const text = el.textContent || "";
-    if (!text || text.includes("Ошибка") || text === "Инициализация...") return;
-    let ok = false;
-    try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch {}
-    if (!ok) { try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta); } catch { ok = false; } }
-    if (ok) { haptic('notify'); const orig = b.textContent; b.textContent = "✓ Скопировано"; b.classList.add("success"); setTimeout(() => { b.textContent = orig; b.classList.remove("success"); }, 2000); }
-  };
-});
 
 try {
   const raw = localStorage.getItem(CACHE_KEY);
