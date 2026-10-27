@@ -73,11 +73,10 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
 
 .key-data-box { background:#000; border:1px solid var(--border); border-radius:10px; padding:14px; margin-bottom:14px; font-family:var(--font-mono); font-size:10px; color:var(--success); word-break:break-all; line-height:1.6; max-height:90px; overflow-y:auto; user-select:all; }
 
-.key-actions { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-.btn-action { width:100%; padding:12px; background:transparent; border:1px solid var(--border); color:var(--text-primary); border-radius:10px; font-family:var(--font-main); font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:6px; }
+.key-actions { display:grid; grid-template-columns:1fr; gap:8px; }
+.btn-action { width:100%; padding:14px; background:transparent; border:1px solid var(--border); color:var(--text-primary); border-radius:10px; font-family:var(--font-main); font-size:13px; font-weight:600; cursor:pointer; transition:all .2s; text-transform:uppercase; display:flex; align-items:center; justify-content:center; gap:6px; }
 .btn-action.success { background:rgba(34,197,94,.1); border-color:rgba(34,197,94,.3); color:var(--success); }
-.btn-action.launch { border-color:rgba(255,255,255,.2); font-weight:700; }
-.btn-action.json-btn { background:rgba(156,124,255,.08); border-color:rgba(156,124,255,.35); color:var(--purple); font-weight:700; grid-column:1 / -1; display:none; }
+.btn-action.json-btn { background:rgba(156,124,255,.08); border-color:rgba(156,124,255,.35); color:var(--purple); font-weight:700; display:none; }
 .btn-action.json-btn:active { background:rgba(156,124,255,.2); }
 
 .toast { position:fixed; bottom:20px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--surface-2); border:1px solid var(--border-hover); color:var(--text-primary); padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; opacity:0; transition:all .3s; z-index:999; pointer-events:none; max-width:90%; text-align:center; }
@@ -125,9 +124,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
       </div>
       <div class="key-data-box" id="key-main">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-action" data-key="main">Копировать</button>
-        <button class="btn-action launch" data-key="main">В INCY</button>
-        <button class="btn-action json-btn" id="json-main" data-key="main" style="display:none;">📥 Скачать JSON</button>
+        <button class="btn-action json-btn" id="json-main" data-key="main">📥 Скачать JSON</button>
       </div>
     </div>
 
@@ -139,9 +136,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
       </div>
       <div class="key-data-box" id="key-reserve">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-action" data-key="reserve">Копировать</button>
-        <button class="btn-action launch" data-key="reserve">В INCY</button>
-        <button class="btn-action json-btn" id="json-reserve" data-key="reserve" style="display:none;">📥 Скачать JSON</button>
+        <button class="btn-action json-btn" id="json-reserve" data-key="reserve">📥 Скачать JSON</button>
       </div>
     </div>
 
@@ -153,7 +148,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
       </div>
       <div class="key-data-box" id="key-my_private">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-action json-btn" id="json-my_private" data-key="my_private" style="display:none;">📥 Скачать JSON</button>
+        <button class="btn-action json-btn" id="json-my_private" data-key="my_private">📥 Скачать JSON</button>
       </div>
     </div>
 
@@ -165,9 +160,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
       </div>
       <div class="key-data-box" id="key-relay">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-action" data-key="relay">Копировать</button>
-        <button class="btn-action launch" data-key="relay">В INCY</button>
-        <button class="btn-action json-btn" id="json-relay" data-key="relay" style="display:none;">📥 Скачать JSON</button>
+        <button class="btn-action json-btn" id="json-relay" data-key="relay">📥 Скачать JSON</button>
       </div>
     </div>
 
@@ -179,8 +172,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
       </div>
       <div class="key-data-box" id="key-hy2">Инициализация...</div>
       <div class="key-actions">
-        <button class="btn-action" data-key="hy2">Копировать</button>
-        <button class="btn-action launch" data-key="hy2">В INCY</button>
+        <button class="btn-action" data-key="hy2">📋 Копировать ссылку</button>
       </div>
     </div>
   </div>
@@ -203,7 +195,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
 'use strict';
 
 const API = "https://wild-rain-661e.vladislavmacko2011.workers.dev";
-const CACHE_KEY = 'vpn_keys_v4';
+const CACHE_KEY = 'vpn_keys_v5';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
 
 const tg = window.Telegram?.WebApp;
@@ -264,11 +256,15 @@ const modal = document.getElementById("reissueModal");
 let keysLoading = false;
 
 function renderKeys(data) {
-  document.getElementById("key-main").textContent = data.main || "Ошибка";
-  document.getElementById("key-reserve").textContent = data.reserve || "Ошибка";
-  document.getElementById("key-my_private").textContent = data.my_private || "Личный профиль — скачай JSON ниже";
-  document.getElementById("key-relay").textContent = data.relay || "Ошибка";
+  // Для тех у кого есть JSON, скрываем текстовое поле, так как будем качать файлом
+  document.getElementById("key-main").textContent = data.cfg_main ? "Файл конфигурации готов" : (data.main || "Ошибка");
+  document.getElementById("key-reserve").textContent = data.cfg_reserve ? "Файл конфигурации готов" : (data.reserve || "Ошибка");
+  document.getElementById("key-my_private").textContent = data.cfg_my_private ? "Файл конфигурации готов" : "Ошибка";
+  document.getElementById("key-relay").textContent = data.cfg_relay ? "Файл конфигурации готов" : (data.relay || "Ошибка");
+  
+  // HY-2 оставляем текстом
   document.getElementById("key-hy2").textContent = data.hy2 || "Ошибка";
+  
   toggleJsonButtons(data);
 }
 
@@ -346,45 +342,16 @@ reissueBtn.onclick = () => { if (keysLoading) return; modal.classList.add("show"
 document.getElementById("cancelReissue").onclick = () => modal.classList.remove("show");
 document.getElementById("confirmReissue").onclick = () => { modal.classList.remove("show"); fetchKeys(true); };
 
-document.querySelectorAll(".btn-action:not(.launch):not(.json-btn)").forEach(b => {
+// Оставляем копирование ТОЛЬКО для HY-2
+document.querySelectorAll(".btn-action:not(.json-btn)").forEach(b => {
   b.onclick = async () => {
     const el = document.getElementById("key-" + b.dataset.key);
     const text = el.textContent || "";
-    if (!text || text.includes("Ошибка") || text === "Инициализация..." || text.startsWith("Личный профиль")) return;
+    if (!text || text.includes("Ошибка") || text === "Инициализация...") return;
     let ok = false;
     try { if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(text); ok = true; } } catch {}
     if (!ok) { try { const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select(); ok = document.execCommand('copy'); document.body.removeChild(ta); } catch { ok = false; } }
-    if (ok) { haptic('notify'); const orig = b.textContent; b.textContent = "✓"; b.classList.add("success"); setTimeout(() => { b.textContent = orig; b.classList.remove("success"); }, 2000); }
-  };
-});
-
-function openIncy(keyText) {
-  const isAndroid = /android/i.test(navigator.userAgent);
-  if (!isAndroid) { navigator.clipboard?.writeText(keyText).catch(() => {}); showToast("Ключ скопирован"); return; }
-  const deepLink = `incy://add/${encodeURIComponent(keyText)}`;
-  let appOpened = false;
-  const onBlur = () => { appOpened = true; };
-  window.addEventListener('blur', onBlur, { once: true });
-  try { if (tg && typeof tg.openLink === 'function') tg.openLink(deepLink); else window.location.href = deepLink; } catch (e) { window.location.href = deepLink; }
-  setTimeout(() => {
-    window.removeEventListener('blur', onBlur);
-    if (!appOpened && document.visibilityState === 'visible') {
-      showToast("INCY не установлен. Открываем Google Play...");
-      setTimeout(() => {
-        const url = "https://play.google.com/store/apps/details?id=llc.itdev.incy";
-        if (tg && typeof tg.openLink === 'function') tg.openLink(url);
-        else window.location.href = url;
-      }, 800);
-    }
-  }, 1500);
-}
-
-document.querySelectorAll(".btn-action.launch").forEach(b => {
-  b.onclick = () => {
-    const el = document.getElementById("key-" + b.dataset.key);
-    const text = el.textContent || "";
-    if (!text || text.includes("Ошибка") || text === "Инициализация..." || text.startsWith("Личный профиль")) { showToast("Сначала получи ключи."); return; }
-    haptic('impact'); openIncy(text);
+    if (ok) { haptic('notify'); const orig = b.textContent; b.textContent = "✓ Скопировано"; b.classList.add("success"); setTimeout(() => { b.textContent = orig; b.classList.remove("success"); }, 2000); }
   };
 });
 
