@@ -4,385 +4,811 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#000000">
-<title>Мамкин Скамер</title>
+<meta name="color-scheme" content="dark">
+<title>Мамкин Скамер · VPN</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{
   --bg:#000;
   --surface:#0a0a0a;
-  --surface-2:#141414;
-  --surface-3:#1a1a1a;
-  --border:#262626;
-  --border-hi:#404040;
+  --surface-hi:#111;
+  --border:rgba(255,255,255,.07);
+  --border-hi:rgba(255,255,255,.14);
+  --border-focus:rgba(255,255,255,.32);
   --text:#fff;
-  --text-dim:#8a8a8a;
-  --text-mute:#5c5c5c;
-  --ok:#e5e5e5;
-  --err:#a3a3a3;
-  --mono:"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
-  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;
+  --text-hi:rgba(255,255,255,.92);
+  --text-mid:rgba(255,255,255,.56);
+  --text-lo:rgba(255,255,255,.32);
+  --danger:#ff5555;
+  --success:#4ade80;
+  --warn:#fbbf24;
+  --font:-apple-system,BlinkMacSystemFont,"Inter","SF Pro Display","Segoe UI",Roboto,sans-serif;
+  --mono:"SF Mono","JetBrains Mono","IBM Plex Mono","Menlo","Consolas",monospace;
+  --r-card:14px;
+  --r-btn:10px;
+  --r-pill:8px;
+  --dur:.18s;
+  --ease:cubic-bezier(.4,0,.2,1);
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{background:var(--bg);color:var(--text);font-family:var(--font);-webkit-font-smoothing:antialiased}
-body{min-height:100vh;display:flex;justify-content:center;font-size:15px;line-height:1.4}
-.wrap{width:100%;max-width:440px;padding:24px 20px 40px;display:flex;flex-direction:column;gap:18px}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text-hi);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  font-size:14px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  letter-spacing:-.01em;
+}
+.app{
+  width:100%;
+  max-width:440px;
+  padding:28px 20px 44px;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+}
 
-/* HEADER */
-.hdr{display:flex;align-items:center;gap:12px;padding:4px 0 8px}
-.logo{width:44px;height:44px;background:var(--surface-2);border-radius:12px;
-border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:22px}
-.brand{display:flex;flex-direction:column;gap:2px}
-.title{font-size:20px;font-weight:600;letter-spacing:-.3px;line-height:1.1}
-.subtitle{font-size:11px;color:var(--text-mute);text-transform:uppercase;letter-spacing:.8px}
+/* ═══ HEADER ═══ */
+.hdr{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 2px;
+}
+.mark{
+  width:44px;height:44px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--text);
+  flex-shrink:0;
+}
+.mark svg{width:22px;height:22px}
+.brand{display:flex;flex-direction:column;gap:1px;min-width:0}
+.brand-name{
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:-.02em;
+  color:var(--text);
+  line-height:1.15;
+}
+.brand-sub{
+  font-size:10.5px;
+  color:var(--text-lo);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  font-weight:500;
+}
 
-/* STATUS CARD */
-.status-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px}
-.status-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
-.status-label{font-size:13px;color:var(--text-dim);font-weight:500}
-.status-pill{font-family:var(--mono);font-size:10px;font-weight:600;letter-spacing:.8px;
-text-transform:uppercase;padding:5px 10px;border-radius:6px;border:1px solid var(--border);
-color:var(--text-mute);background:transparent;transition:all .2s}
-.status-pill.ok{color:var(--text);border-color:var(--border-hi);background:var(--surface-2)}
-.status-pill.err{color:var(--text-mute);border-color:var(--border)}
-.status-pill.loading{color:var(--text-mute);animation:pulse 1.5s ease-in-out infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.status-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.stat-val{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.4px;
-color:var(--text);line-height:1.2}
-.stat-lbl{font-size:10px;color:var(--text-mute);text-transform:uppercase;
-letter-spacing:.7px;margin-top:4px;font-weight:500}
+/* ═══ STATUS ═══ */
+.status{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-card);
+  padding:16px 18px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+.status-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.status-label{
+  font-size:10.5px;
+  font-weight:600;
+  color:var(--text-lo);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+}
+.pill{
+  font-family:var(--mono);
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:4px 8px;
+  border-radius:var(--r-pill);
+  border:1px solid var(--border-hi);
+  color:var(--text-mid);
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  transition:all var(--dur) var(--ease);
+}
+.pill::before{
+  content:"";
+  width:5px;height:5px;
+  border-radius:50%;
+  background:currentColor;
+  opacity:.6;
+}
+.pill.loading{color:var(--text-lo)}
+.pill.loading::before{animation:blink 1.4s ease-in-out infinite}
+.pill.active{color:var(--success);border-color:rgba(74,222,128,.22);background:rgba(74,222,128,.06)}
+.pill.active::before{opacity:1}
+.pill.expired{color:var(--danger);border-color:rgba(255,85,85,.22);background:rgba(255,85,85,.06)}
+.pill.expired::before{opacity:1}
+.pill.error{color:var(--warn);border-color:rgba(251,191,36,.22);background:rgba(251,191,36,.06)}
+@keyframes blink{0%,100%{opacity:.3}50%{opacity:1}}
+.status-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+.stat{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  min-width:0;
+}
+.stat-value{
+  font-family:var(--mono);
+  font-size:17px;
+  font-weight:600;
+  letter-spacing:-.02em;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.stat-value.muted{color:var(--text-lo);font-weight:500}
+.stat-label{
+  font-size:10.5px;
+  color:var(--text-lo);
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-weight:500;
+}
+.skeleton{
+  display:inline-block;
+  height:1em;
+  width:60%;
+  background:linear-gradient(90deg,var(--surface) 0%,var(--surface-hi) 50%,var(--surface) 100%);
+  background-size:200% 100%;
+  border-radius:4px;
+  animation:shimmer 1.5s infinite linear;
+  color:transparent;
+}
+@keyframes shimmer{from{background-position:200% 0}to{background-position:-200% 0}}
 
-/* SECTION */
-.section-label{font-size:11px;font-weight:600;color:var(--text-mute);
-text-transform:uppercase;letter-spacing:.9px;padding:4px 2px 0}
-.section-label.with-margin{margin-top:8px}
+/* ═══ BANNER ═══ */
+.banner{
+  display:none;
+  padding:12px 14px;
+  background:var(--surface);
+  border:1px solid var(--border-hi);
+  border-radius:10px;
+  font-size:12.5px;
+  line-height:1.45;
+  color:var(--text-mid);
+}
+.banner.show{display:block}
+.banner b{color:var(--text);font-weight:600;display:block;margin-bottom:2px;font-size:13px}
+.banner.warn{border-color:rgba(251,191,36,.28)}
+.banner.warn b{color:var(--warn)}
+.banner.danger{border-color:rgba(255,85,85,.28)}
+.banner.danger b{color:var(--danger)}
 
-/* PROFILE CARD */
-.profile{background:var(--surface);border:1px solid var(--border);border-radius:14px;
-overflow:hidden;transition:border-color .15s}
-.profile-hdr{display:flex;align-items:center;gap:14px;padding:16px 18px 14px}
-.profile-flag{width:42px;height:42px;background:var(--surface-2);border-radius:10px;
-border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
-font-size:20px;flex-shrink:0}
-.profile-info{flex:1;min-width:0}
-.profile-name{font-size:15px;font-weight:600;color:var(--text);margin-bottom:3px;
-line-height:1.2;letter-spacing:-.2px}
-.profile-desc{font-size:12px;color:var(--text-mute);line-height:1.35}
+/* ═══ SECTION ═══ */
+.section{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.section + .section{margin-top:-8px}
+.section-title{
+  font-size:10.5px;
+  font-weight:600;
+  color:var(--text-lo);
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  padding:0 4px;
+  margin-bottom:2px;
+}
 
-/* DOWNLOAD BUTTON */
-.btn-dl{display:flex;align-items:center;justify-content:space-between;width:100%;
-padding:14px 18px;background:transparent;border:none;border-top:1px solid var(--border);
-color:var(--text);font-family:var(--font);font-size:13px;font-weight:600;cursor:pointer;
-text-transform:uppercase;letter-spacing:.4px;transition:background .15s}
-.btn-dl:active{background:var(--surface-2)}
-.btn-dl:disabled{opacity:.55;cursor:not-allowed}
-.btn-dl .lbl{display:flex;align-items:center;gap:8px}
-.btn-dl .arrow{color:var(--text-mute);font-size:14px;transition:transform .2s}
-.btn-dl.loading .arrow{animation:spin .9s linear infinite}
-.btn-dl.sent{color:var(--text-dim);background:var(--surface-2)}
+/* ═══ PROFILE ═══ */
+.profile{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-card);
+  overflow:hidden;
+  transition:border-color var(--dur) var(--ease);
+}
+.profile::before{
+  content:"";
+  position:absolute;
+  top:0;left:0;right:0;
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--border-hi) 20%,var(--border-hi) 80%,transparent);
+  opacity:.5;
+}
+.profile:active{border-color:var(--border-hi)}
+.profile-hdr{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:16px 16px 12px;
+}
+.profile-mark{
+  width:38px;height:38px;
+  flex-shrink:0;
+  background:var(--surface-hi);
+  border:1px solid var(--border);
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:var(--mono);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.04em;
+  color:var(--text);
+  position:relative;
+}
+.profile-mark::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,255,255,.04),transparent 60%);
+  pointer-events:none;
+}
+.profile-mark.de{color:#fff}
+.profile-mark.ru{color:#fff}
+.profile-mark.hy{color:#fff}
+.profile-body{flex:1;min-width:0}
+.profile-name{
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:-.015em;
+  color:var(--text);
+  line-height:1.25;
+  margin-bottom:2px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.profile-name .tag{
+  font-family:var(--mono);
+  font-size:9.5px;
+  font-weight:600;
+  letter-spacing:.05em;
+  padding:1.5px 5px;
+  border-radius:4px;
+  background:var(--surface-hi);
+  border:1px solid var(--border-hi);
+  color:var(--text-mid);
+  text-transform:uppercase;
+  line-height:1;
+  margin-top:1px;
+}
+.profile-desc{
+  font-size:11.5px;
+  color:var(--text-lo);
+  line-height:1.35;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.btn-dl{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  width:100%;
+  padding:12px 16px;
+  background:transparent;
+  border:none;
+  border-top:1px solid var(--border);
+  color:var(--text-mid);
+  font-family:var(--font);
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.02em;
+  cursor:pointer;
+  transition:all var(--dur) var(--ease);
+  text-align:left;
+}
+.btn-dl:hover{background:rgba(255,255,255,.02);color:var(--text)}
+.btn-dl:active{background:rgba(255,255,255,.04)}
+.btn-dl:disabled{cursor:not-allowed;opacity:.6}
+.btn-dl .lbl{display:flex;align-items:center;gap:6px}
+.btn-dl .icon{
+  width:14px;height:14px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  transition:transform var(--dur) var(--ease);
+}
+.btn-dl:hover .icon{transform:translateY(2px)}
+.btn-dl.loading .icon{
+  animation:spin .9s linear infinite;
+  transform:none;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
+.btn-dl.sent{
+  color:var(--success);
+  background:rgba(74,222,128,.04);
+}
+.btn-dl.sent .icon{animation:none}
+.btn-dl.error{
+  color:var(--danger);
+  background:rgba(255,85,85,.04);
+}
 
-/* HINT */
-.hint{font-size:12px;color:var(--text-dim);line-height:1.65;padding:16px;
-background:var(--surface);border:1px solid var(--border);border-radius:12px}
-.hint-title{font-size:11px;font-weight:600;color:var(--text);text-transform:uppercase;
-letter-spacing:.7px;margin-bottom:10px}
-.hint ol{padding-left:20px;margin:0}
-.hint li{margin:6px 0}
-.hint b{color:var(--text);font-weight:600}
-.hint-sep{height:1px;background:var(--border);margin:14px 0}
-.hint-note{color:var(--text-mute);font-size:11.5px;line-height:1.55}
+/* ═══ INSTRUCTIONS ═══ */
+.guide{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--r-card);
+  overflow:hidden;
+}
+.guide summary{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:14px 16px;
+  cursor:pointer;
+  list-style:none;
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--text);
+  letter-spacing:-.005em;
+  transition:background var(--dur) var(--ease);
+}
+.guide summary::-webkit-details-marker{display:none}
+.guide summary:hover{background:rgba(255,255,255,.02)}
+.guide summary .chev{
+  transition:transform var(--dur) var(--ease);
+  color:var(--text-lo);
+  font-size:11px;
+}
+.guide[open] summary .chev{transform:rotate(180deg)}
+.guide-body{
+  padding:0 16px 16px;
+  border-top:1px solid var(--border);
+  padding-top:14px;
+}
+.step{
+  display:flex;
+  gap:12px;
+  padding:8px 0;
+  font-size:12.5px;
+  line-height:1.5;
+  color:var(--text-mid);
+}
+.step:not(:last-child){border-bottom:1px solid rgba(255,255,255,.03)}
+.step-num{
+  font-family:var(--mono);
+  font-size:10.5px;
+  font-weight:600;
+  color:var(--text-lo);
+  flex-shrink:0;
+  width:18px;
+  padding-top:2px;
+  letter-spacing:.03em;
+}
+.step-text b{color:var(--text);font-weight:600}
+.step-text code{
+  font-family:var(--mono);
+  font-size:11px;
+  background:var(--surface-hi);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:1px 5px;
+  color:var(--text);
+}
+.guide-note{
+  margin-top:10px;
+  padding-top:12px;
+  border-top:1px solid rgba(255,255,255,.03);
+  font-size:11px;
+  color:var(--text-lo);
+  line-height:1.5;
+}
 
-/* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);
-background:var(--surface-3);border:1px solid var(--border-hi);color:var(--text);
-padding:12px 20px;border-radius:10px;font-size:13px;font-weight:500;opacity:0;
-transition:all .3s cubic-bezier(.16,1,.3,1);z-index:9999;pointer-events:none;
-max-width:calc(100% - 40px);text-align:center;line-height:1.4;
-box-shadow:0 8px 24px rgba(0,0,0,.6)}
-.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
-.toast.err{border-color:#404040}
-.toast.ok{border-color:#525252}
+/* ═══ TOAST ═══ */
+.toast{
+  position:fixed;
+  bottom:max(24px,env(safe-area-inset-bottom));
+  left:50%;
+  transform:translateX(-50%) translateY(120px);
+  background:var(--surface-hi);
+  border:1px solid var(--border-hi);
+  color:var(--text);
+  padding:11px 18px;
+  border-radius:10px;
+  font-size:12.5px;
+  font-weight:500;
+  opacity:0;
+  transition:all .28s var(--ease);
+  z-index:9999;
+  pointer-events:none;
+  max-width:calc(100% - 40px);
+  text-align:center;
+  box-shadow:0 8px 32px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.02);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.toast.show{
+  transform:translateX(-50%) translateY(0);
+  opacity:1;
+}
+.toast.ok{border-color:rgba(74,222,128,.3);color:var(--success)}
+.toast.err{border-color:rgba(255,85,85,.3);color:var(--danger)}
 
-/* ERROR BANNER */
-.err-banner{display:none;padding:12px 14px;background:var(--surface-2);
-border:1px solid var(--border-hi);border-radius:10px;font-size:12px;
-color:var(--text-dim);line-height:1.5}
-.err-banner.show{display:block}
-.err-banner b{color:var(--text)}
+/* ═══ FOOTER ═══ */
+.foot{
+  text-align:center;
+  font-size:10.5px;
+  color:var(--text-lo);
+  font-family:var(--mono);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  padding-top:4px;
+  opacity:.6;
+}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="app">
 
   <!-- HEADER -->
-  <div class="hdr">
-    <div class="logo">🕶️</div>
-    <div class="brand">
-      <div class="title">Мамкин Скамер</div>
-      <div class="subtitle">VPN · личный кабинет</div>
+  <header class="hdr">
+    <div class="mark">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="6" cy="15" r="3"/>
+        <circle cx="18" cy="15" r="3"/>
+        <path d="M9 15h6"/>
+        <path d="M3 12c3-4 5-6 9-6s6 2 9 6"/>
+      </svg>
     </div>
-  </div>
+    <div class="brand">
+      <span class="brand-name">Мамкин Скамер</span>
+      <span class="brand-sub">VPN · личный кабинет</span>
+    </div>
+  </header>
 
   <!-- STATUS -->
-  <div class="status-card">
-    <div class="status-row">
+  <section class="status">
+    <div class="status-top">
       <span class="status-label">Подписка</span>
-      <div id="badge" class="status-pill loading">загрузка</div>
+      <span id="pill" class="pill loading">загрузка</span>
     </div>
     <div class="status-grid">
-      <div>
-        <div class="stat-val" id="expiry">—</div>
-        <div class="stat-lbl">Действует до</div>
+      <div class="stat">
+        <span class="stat-value skeleton" id="expiry">—</span>
+        <span class="stat-label">Действует до</span>
       </div>
-      <div>
-        <div class="stat-val" id="traffic">0 MB</div>
-        <div class="stat-lbl">Скачано</div>
-      </div>
-    </div>
-  </div>
-
-  <div id="err-banner" class="err-banner"></div>
-
-  <!-- ОСНОВНЫЕ -->
-  <div class="section-label">Основные профили</div>
-
-  <div class="profile">
-    <div class="profile-hdr">
-      <div class="profile-flag">🇩🇪</div>
-      <div class="profile-info">
-        <div class="profile-name">DE Основной ⚡</div>
-        <div class="profile-desc">XHTTP + Reality · универсальный, для всего</div>
+      <div class="stat">
+        <span class="stat-value skeleton" id="traffic">—</span>
+        <span class="stat-label">Скачано</span>
       </div>
     </div>
-    <button class="btn-dl" id="btn-de" data-which="de">
-      <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
-      <span class="arrow">↓</span>
-    </button>
-  </div>
+  </section>
 
-  <div class="profile">
-    <div class="profile-hdr">
-      <div class="profile-flag">🇷🇺</div>
-      <div class="profile-info">
-        <div class="profile-name">RU Игровой 🎮</div>
-        <div class="profile-desc">Каскад · низкий пинг для eFootball и LTE</div>
+  <!-- BANNER -->
+  <div id="banner" class="banner"></div>
+
+  <!-- MAIN PROFILES -->
+  <section class="section">
+    <div class="section-title">Основные</div>
+
+    <div class="profile">
+      <div class="profile-hdr">
+        <div class="profile-mark de">DE</div>
+        <div class="profile-body">
+          <div class="profile-name">DE Основной <span class="tag">XHTTP</span></div>
+          <div class="profile-desc">XHTTP + Reality · универсальный</div>
+        </div>
+      </div>
+      <button class="btn-dl" id="btn-de" data-which="de">
+        <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
+        <span class="icon">↓</span>
+      </button>
+    </div>
+
+    <div class="profile">
+      <div class="profile-hdr">
+        <div class="profile-mark ru">RU</div>
+        <div class="profile-body">
+          <div class="profile-name">RU Игровой <span class="tag">GAME</span></div>
+          <div class="profile-desc">Каскад · низкий пинг для eFootball</div>
+        </div>
+      </div>
+      <button class="btn-dl" id="btn-ru" data-which="ru">
+        <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
+        <span class="icon">↓</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- RESERVE PROFILES -->
+  <section class="section">
+    <div class="section-title">Резервные</div>
+
+    <div class="profile">
+      <div class="profile-hdr">
+        <div class="profile-mark de">DE</div>
+        <div class="profile-body">
+          <div class="profile-name">DE Резерв <span class="tag">TCP</span></div>
+          <div class="profile-desc">TCP + Vision · если XHTTP недоступен</div>
+        </div>
+      </div>
+      <button class="btn-dl" id="btn-tcp" data-which="tcp">
+        <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
+        <span class="icon">↓</span>
+      </button>
+    </div>
+
+    <div class="profile">
+      <div class="profile-hdr">
+        <div class="profile-mark hy">HY</div>
+        <div class="profile-body">
+          <div class="profile-name">HY2 Резерв <span class="tag">UDP</span></div>
+          <div class="profile-desc">Hysteria2 · при блокировке TCP</div>
+        </div>
+      </div>
+      <button class="btn-dl" id="btn-hy2" data-which="hy2">
+        <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
+        <span class="icon">↓</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- GUIDE -->
+  <details class="guide" open>
+    <summary>
+      <span>Как подключиться</span>
+      <span class="chev">▾</span>
+    </summary>
+    <div class="guide-body">
+      <div class="step">
+        <span class="step-num">01</span>
+        <span class="step-text">Нажми <b>«Скачать .json»</b> — файл придет в чат с ботом</span>
+      </div>
+      <div class="step">
+        <span class="step-num">02</span>
+        <span class="step-text">Установи клиент: <b>Happ</b> iOS · <b>v2rayNG</b> Android · <b>v2rayN</b> ПК</span>
+      </div>
+      <div class="step">
+        <span class="step-num">03</span>
+        <span class="step-text">В клиенте: <code>+</code> → <b>Импорт из файла</b> → выбери <code>.json</code></span>
+      </div>
+      <div class="step">
+        <span class="step-num">04</span>
+        <span class="step-text">Включи VPN</span>
+      </div>
+      <div class="guide-note">
+        RU-сайты и банки работают напрямую. Торренты мимо VPN.
       </div>
     </div>
-    <button class="btn-dl" id="btn-ru" data-which="ru">
-      <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
-      <span class="arrow">↓</span>
-    </button>
-  </div>
+  </details>
 
-  <!-- РЕЗЕРВНЫЕ -->
-  <div class="section-label with-margin">Резервные</div>
-
-  <div class="profile">
-    <div class="profile-hdr">
-      <div class="profile-flag">🛡️</div>
-      <div class="profile-info">
-        <div class="profile-name">DE Резерв (TCP)</div>
-        <div class="profile-desc">TCP + Vision · если XHTTP не работает</div>
-      </div>
-    </div>
-    <button class="btn-dl" id="btn-tcp" data-which="tcp">
-      <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
-      <span class="arrow">↓</span>
-    </button>
-  </div>
-
-  <div class="profile">
-    <div class="profile-hdr">
-      <div class="profile-flag">🛡️</div>
-      <div class="profile-info">
-        <div class="profile-name">HY2 Резерв</div>
-        <div class="profile-desc">Hysteria2 UDP · на случай блокировки TCP</div>
-      </div>
-    </div>
-    <button class="btn-dl" id="btn-hy2" data-which="hy2">
-      <span class="lbl"><span class="lbl-text">Скачать .json</span></span>
-      <span class="arrow">↓</span>
-    </button>
-  </div>
-
-  <!-- HINT -->
-  <div class="hint">
-    <div class="hint-title">Как подключиться</div>
-    <ol>
-      <li>Нажми <b>«Скачать .json»</b> — файл придёт в чат с ботом</li>
-      <li>Установи клиент: <b>Happ</b> (iOS) · <b>v2rayNG</b> (Android) · <b>v2rayN</b> (ПК)</li>
-      <li>В клиенте: <b>«+» → «Импорт из файла»</b></li>
-      <li>Выбери скачанный <b>.json</b></li>
-      <li>Включи VPN</li>
-    </ol>
-    <div class="hint-sep"></div>
-    <div class="hint-note">
-      RU-сайты и банки работают напрямую. Торренты мимо VPN.
-    </div>
-  </div>
+  <div class="foot">v2 · mamkin vpn</div>
 
   <div class="toast" id="toast"></div>
 </div>
 
 <script>
 'use strict';
-const API = "https://cryptozzero.dpdns.org";
+
+const API = "https://wild-rain-661e.vladislavmacko2011.workers.dev";
 const tg = window.Telegram?.WebApp;
+
 try {
   if (tg) {
     tg.ready();
     tg.expand();
     tg.setHeaderColor('#000000');
     tg.setBackgroundColor('#000000');
+    if (tg.isVersionAtLeast && tg.isVersionAtLeast('7.10')) {
+      tg.disableVerticalSwipes?.();
+    }
   }
 } catch(e) {}
 
-const haptic = (t) => {
+const haptic = (type) => {
   try {
-    if (t === 'impact') tg?.HapticFeedback?.impactOccurred?.('light');
-    if (t === 'notify') tg?.HapticFeedback?.notificationOccurred?.('success');
-    if (t === 'error')  tg?.HapticFeedback?.notificationOccurred?.('error');
-  } catch {}
+    if (!tg?.HapticFeedback) return;
+    if (type === 'impact') tg.HapticFeedback.impactOccurred('light');
+    if (type === 'success') tg.HapticFeedback.notificationOccurred('success');
+    if (type === 'error') tg.HapticFeedback.notificationOccurred('error');
+  } catch(e) {}
 };
 
-function toast(msg, ok) {
-  const el = document.getElementById("toast");
+// ─── TOAST ───
+let toastTimer = null;
+function toast(msg, variant = '') {
+  const el = document.getElementById('toast');
   el.textContent = msg;
-  el.className = "toast show " + (ok === false ? "err" : "ok");
-  clearTimeout(window._tt);
-  window._tt = setTimeout(() => el.classList.remove("show"), 3200);
+  el.className = 'toast show' + (variant ? ' ' + variant : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3400);
 }
 
-function showBanner(html) {
-  const el = document.getElementById("err-banner");
+// ─── BANNER ───
+function banner(html, variant = '') {
+  const el = document.getElementById('banner');
+  if (!html) {
+    el.classList.remove('show');
+    return;
+  }
+  el.className = 'banner show' + (variant ? ' ' + variant : '');
   el.innerHTML = html;
-  el.classList.add("show");
-}
-function hideBanner() {
-  document.getElementById("err-banner").classList.remove("show");
 }
 
+// ─── FORMATTERS ───
 function fmtDate(s) {
-  if (!s || s === "forever" || s === 0) return "∞";
+  if (!s || s === 'forever' || s === 0) return '∞ навсегда';
   try {
     const d = new Date(s);
-    if (isNaN(d)) return "—";
-    return d.toLocaleDateString('ru-RU', {day:'2-digit',month:'2-digit',year:'numeric'});
-  } catch { return "—"; }
+    if (isNaN(d)) return '—';
+    return d.toLocaleDateString('ru-RU', {day:'2-digit', month:'2-digit', year:'numeric'});
+  } catch { return '—'; }
 }
-
 function fmtTraffic(gb) {
   const n = Number(gb) || 0;
-  if (n <= 0) return "0 MB";
-  if (n >= 1) return n.toFixed(2) + " GB";
-  return Math.round(n * 1024) + " MB";
+  if (n <= 0) return '0.00 GB';
+  if (n >= 1) return n.toFixed(2) + ' GB';
+  return Math.round(n * 1024) + ' MB';
 }
 
+// ─── STATUS ───
 async function loadStatus() {
-  const b = document.getElementById("badge");
+  const pill = document.getElementById('pill');
+  const expiry = document.getElementById('expiry');
+  const traffic = document.getElementById('traffic');
+
   if (!tg || !tg.initData) {
-    b.textContent = "offline";
-    b.className = "status-pill err";
-    showBanner("<b>Открой через Telegram</b><br>Mini App работает только внутри бота.");
+    pill.className = 'pill error';
+    pill.textContent = 'нет доступа';
+    expiry.classList.remove('skeleton'); expiry.textContent = '—';
+    traffic.classList.remove('skeleton'); traffic.textContent = '—';
+    banner('<b>Открой через Telegram</b>Mini App работает только внутри бота', 'warn');
     return;
   }
+
   try {
-    const r = await fetch(`${API}/api/status?initData=${encodeURIComponent(tg.initData)}`, {cache:"no-store"});
+    const r = await fetch(`${API}/api/status?initData=${encodeURIComponent(tg.initData)}`, { cache: 'no-store' });
     if (r.status === 403) {
-      b.textContent = "нет доступа";
-      b.className = "status-pill err";
-      showBanner("<b>Не подписан на канал</b><br>Подпишись и попробуй снова.");
+      pill.className = 'pill error';
+      pill.textContent = 'ошибка';
+      banner('<b>Ошибка доступа</b>Проверь, что ты подписан на канал', 'warn');
+      expiry.classList.remove('skeleton');
+      traffic.classList.remove('skeleton');
       return;
     }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+
     const d = await r.json();
+    expiry.classList.remove('skeleton');
+    traffic.classList.remove('skeleton');
+
     if (d.active) {
-      b.textContent = "активна";
-      b.className = "status-pill ok";
-      hideBanner();
+      pill.className = 'pill active';
+      pill.textContent = 'активна';
+      banner('');
     } else {
-      b.textContent = "неактивна";
-      b.className = "status-pill err";
-      showBanner("<b>Подписка не активна</b><br>В боте: /start → 🎁 Триал или 💸 Купить");
+      pill.className = 'pill expired';
+      pill.textContent = 'не активна';
+      banner('<b>Подписка не активна</b>В боте: /start → 🎁 Триал или 💸 Купить', 'warn');
     }
-    document.getElementById("expiry").textContent = fmtDate(d.expiry);
-    document.getElementById("traffic").textContent = fmtTraffic(d.traffic_gb);
+
+    expiry.textContent = fmtDate(d.expiry);
+    traffic.textContent = fmtTraffic(d.traffic_gb);
+
   } catch (e) {
-    b.textContent = "ошибка";
-    b.className = "status-pill err";
+    pill.className = 'pill error';
+    pill.textContent = 'ошибка';
+    expiry.classList.remove('skeleton'); expiry.textContent = '—';
+    traffic.classList.remove('skeleton'); traffic.textContent = '—';
+    banner('<b>Нет связи</b>Проверь интернет или попробуй позже', 'danger');
   }
 }
 
+// ─── DOWNLOAD ───
 async function download(which, btn) {
   if (!tg || !tg.initData) {
-    toast("Открой через Telegram", false);
+    toast('Открой через Telegram', 'err');
     return;
   }
-  const label = btn.querySelector(".lbl-text");
-  const arrow = btn.querySelector(".arrow");
+
+  const label = btn.querySelector('.lbl-text');
+  const icon = btn.querySelector('.icon');
+  const original = label.textContent;
+
   btn.disabled = true;
-  btn.classList.add("loading");
-  label.textContent = "Отправка...";
-  arrow.textContent = "⟳";
+  btn.classList.remove('sent', 'error');
+  btn.classList.add('loading');
+  label.textContent = 'Отправка';
+  icon.textContent = '⟳';
   haptic('impact');
 
   try {
     const r = await fetch(`${API}/api/file/${which}?initData=${encodeURIComponent(tg.initData)}`);
-    let d = {};
-    try { d = await r.json(); } catch {}
 
     if (r.status === 402) {
       haptic('error');
-      toast("Нет активной подписки", false);
-      showBanner("<b>Подписка не активна</b><br>В боте: /start → 🎁 Триал или 💸 Купить");
-      resetBtn(btn, label, arrow);
+      btn.classList.remove('loading');
+      btn.classList.add('error');
+      label.textContent = 'Нет подписки';
+      icon.textContent = '×';
+      toast('Сначала активируй подписку', 'err');
+      banner('<b>Подписка не активна</b>В боте: /start → 🎁 Триал или 💸 Купить', 'warn');
+      setTimeout(() => resetBtn(btn, label, icon, original), 2000);
       return;
     }
     if (r.status === 403) {
       haptic('error');
-      toast("Не подписан на канал", false);
-      showBanner("<b>Не подписан на канал</b><br>Подпишись и попробуй снова.");
-      resetBtn(btn, label, arrow);
+      btn.classList.remove('loading');
+      btn.classList.add('error');
+      label.textContent = 'Нет доступа';
+      icon.textContent = '×';
+      toast('Подпишись на канал', 'err');
+      setTimeout(() => resetBtn(btn, label, icon, original), 2000);
       return;
     }
     if (r.status === 404) {
       haptic('error');
-      toast("Профиль недоступен", false);
-      resetBtn(btn, label, arrow);
+      btn.classList.remove('loading');
+      btn.classList.add('error');
+      label.textContent = 'Недоступно';
+      icon.textContent = '×';
+      toast('Профиль временно недоступен', 'err');
+      setTimeout(() => resetBtn(btn, label, icon, original), 2000);
       return;
     }
-    if (!r.ok || !d.ok) {
-      throw new Error(d.error || `HTTP ${r.status}`);
-    }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
 
-    haptic('notify');
-    toast("Файл отправлен в чат", true);
-    label.textContent = "Отправлено";
-    arrow.textContent = "✓";
-    btn.classList.add("sent");
-    btn.classList.remove("loading");
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || 'fail');
+
+    haptic('success');
+    btn.classList.remove('loading');
+    btn.classList.add('sent');
+    label.textContent = 'Отправлено в чат';
+    icon.textContent = '✓';
+    toast('Файл отправлен в чат бота', 'ok');
 
     setTimeout(() => {
       try { tg.close(); } catch(e) {}
     }, 1400);
+
   } catch (e) {
     haptic('error');
-    toast("Ошибка: " + (e.message || "fail"), false);
-    resetBtn(btn, label, arrow);
+    btn.classList.remove('loading');
+    btn.classList.add('error');
+    label.textContent = 'Ошибка';
+    icon.textContent = '×';
+    toast('Ошибка: ' + (e.message || 'fail'), 'err');
+    setTimeout(() => resetBtn(btn, label, icon, original), 2200);
   }
 }
 
-function resetBtn(btn, label, arrow) {
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.classList.remove("loading", "sent");
-    label.textContent = "Скачать .json";
-    arrow.textContent = "↓";
-  }, 800);
+function resetBtn(btn, label, icon, original) {
+  btn.disabled = false;
+  btn.classList.remove('loading', 'sent', 'error');
+  label.textContent = original;
+  icon.textContent = '↓';
 }
 
-document.querySelectorAll(".btn-dl").forEach(btn => {
-  btn.addEventListener("click", () => download(btn.dataset.which, btn));
+// ─── INIT ───
+document.querySelectorAll('.btn-dl').forEach(btn => {
+  btn.addEventListener('click', () => download(btn.dataset.which, btn));
 });
 
 loadStatus();
