@@ -151,7 +151,7 @@ body { font-family:var(--font-main); background:var(--bg); color:var(--text-prim
 'use strict';
 
 const API = "https://wild-rain-661e.vladislavmacko2011.workers.dev";
-const CACHE_KEY = 'vpn_keys_v6';
+const CACHE_KEY = 'vpn_keys_v7';
 const CACHE_TTL = 1000 * 60 * 60 * 6;
 
 const tg = window.Telegram?.WebApp;
@@ -212,10 +212,6 @@ const modal = document.getElementById("reissueModal");
 let keysLoading = false;
 
 function renderKeys(data) {
-  toggleJsonButtons(data);
-}
-
-function toggleJsonButtons(data) {
   const map = {
     "my_private": data.cfg_my_private,
     "relay":      data.cfg_relay,
@@ -225,32 +221,52 @@ function toggleJsonButtons(data) {
     if (!b) continue;
     if (content && content.length > 50) {
       b.style.display = "flex";
-      b.dataset.json = content;
+      b.dataset.ready = "1";
     } else {
       b.style.display = "none";
     }
   }
 }
 
-function downloadJson(key) {
-  const b = document.getElementById("json-" + key);
-  if (!b || !b.dataset.json) { showToast("❌ JSON ещё не готов"); return; }
-  try { JSON.parse(b.dataset.json); } catch(e) { showToast("❌ JSON невалидный"); return; }
-  
+// ОТПРАВКА ФАЙЛА В ЧАТ БОТА
+async function downloadJson(key) {
   const names = {
     "my_private": "DE-Osnovnoy.json",
     "relay":      "RU-Igrovoy.json",
   };
+  const fname = names[key] || 'config.json';
+  const btn = document.getElementById("json-" + key);
   
-  const blob = new Blob([b.dataset.json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = names[key] || 'config.json';
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  
-  showToast("📥 " + (names[key] || 'JSON') + " скачан");
-  haptic('notify');
+  if (btn) { 
+    btn.disabled = true; 
+    btn.textContent = "📤 Отправляю в чат..."; 
+  }
+
+  try {
+    const resp = await fetch(`${API}/api/send-file`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ initData: tg.initData, key }),
+    });
+    const data = await resp.json();
+    if (!data.ok) throw new Error(data.error || 'fail');
+
+    showToast("✅ " + fname + " отправлен в чат бота");
+    haptic('notify');
+
+    // Автоматически закрываем Mini App, чтобы юзер увидел файл в чате
+    setTimeout(() => { 
+      if (tg && tg.close) tg.close(); 
+    }, 1500);
+
+  } catch (e) {
+    showToast("❌ Ошибка: " + e.message);
+    haptic('error');
+    if (btn) { 
+      btn.disabled = false; 
+      btn.textContent = "📥 Скачать JSON"; 
+    }
+  }
 }
 
 document.querySelectorAll('.json-btn').forEach(b => {
